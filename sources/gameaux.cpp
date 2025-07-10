@@ -153,9 +153,6 @@ extern int HP_obj[HP_OBJS_MAX];
 extern int HP_obj_type[HP_OBJS_MAX];
 extern int HP_obj_aux[HP_OBJS_MAX];
 
-/* Teclado: */ 
-extern unsigned char old_keyboard[SDLK_LAST];
-
 /* Efectos de sonido: */ 
 extern SOUNDT S_pause,S_death,S_gameover,S_worldkey,S_entering;
 extern SOUNDT S_gamestart,S_jump,S_sword,S_swordhit;
@@ -183,9 +180,9 @@ extern int zoom;
 
 
 /* Teclas: */ 
-extern SDLKey UP_KEY,DOWN_KEY,LEFT_KEY,RIGHT_KEY;
-extern SDLKey SWORD_KEY,WEAPON_KEY,ITEM_KEY,PAUSE_KEY;
-extern SDLKey last_word[16];
+extern SDL_Scancode UP_KEY,DOWN_KEY,LEFT_KEY,RIGHT_KEY;
+extern SDL_Scancode SWORD_KEY,WEAPON_KEY,ITEM_KEY,PAUSE_KEY;
+extern SDL_Scancode last_word[16];
 
 extern char password[48];
 
@@ -2572,16 +2569,16 @@ bool cargar_configuracion(char *filename)
 
 	/* Keyboard configuration: */ 
 	if (4!=fscanf(fp,"%i %i %i %i",&itmp[0],&itmp[1],&itmp[2],&itmp[3])) return false;
-	UP_KEY = (SDLKey) itmp[0];
-	DOWN_KEY = (SDLKey) itmp[1];
-	LEFT_KEY = (SDLKey) itmp[2];
-	RIGHT_KEY = (SDLKey) itmp[3];
+	UP_KEY = (SDL_Scancode) itmp[0];
+	DOWN_KEY = (SDL_Scancode) itmp[1];
+	LEFT_KEY = (SDL_Scancode) itmp[2];
+	RIGHT_KEY = (SDL_Scancode) itmp[3];
 
 	if (4!=fscanf(fp,"%i %i %i %i",&itmp[0],&itmp[1],&itmp[2],&itmp[3])) return false;
-	SWORD_KEY = (SDLKey) itmp[0];
-	WEAPON_KEY = (SDLKey) itmp[1];
-	ITEM_KEY = (SDLKey) itmp[2];
-	PAUSE_KEY = (SDLKey) itmp[3];
+	SWORD_KEY = (SDL_Scancode) itmp[0];
+	WEAPON_KEY = (SDL_Scancode) itmp[1];
+	ITEM_KEY = (SDL_Scancode) itmp[2];
+	PAUSE_KEY = (SDL_Scancode) itmp[3];
 
 	/* Graphics path: */ 
 	fscanf(fp,"%s",tmp);
@@ -2617,14 +2614,14 @@ bool cargar_configuracion(char *filename)
 
 void configuracion_por_defecto(void)
 {
-	UP_KEY=SDLK_UP;
-	DOWN_KEY=SDLK_DOWN;
-	LEFT_KEY=SDLK_LEFT;
-	RIGHT_KEY=SDLK_RIGHT;
-	SWORD_KEY=SDLK_SPACE;
-	WEAPON_KEY=SDLK_m;
-	ITEM_KEY=SDLK_F1;
-	PAUSE_KEY=SDLK_F2;
+	UP_KEY=SDL_SCANCODE_UP;
+	DOWN_KEY=SDL_SCANCODE_DOWN;
+	LEFT_KEY=SDL_SCANCODE_LEFT;
+	RIGHT_KEY=SDL_SCANCODE_RIGHT;
+	SWORD_KEY=SDL_SCANCODE_SPACE;
+	WEAPON_KEY=SDL_SCANCODE_M;
+	ITEM_KEY=SDL_SCANCODE_F1;
+	PAUSE_KEY=SDL_SCANCODE_F2;
 
 	// default gfx set: naramura
 	act_g_path=0;
@@ -2777,7 +2774,7 @@ void clear_typed_word(void)
 {
 	int i;
 
-	for(i=0;i<16;i++) last_word[i]=SDLK_UNKNOWN;
+	for(i=0;i<16;i++) last_word[i]=SDL_SCANCODE_UNKNOWN;
 
 } /* clear_typed_word */ 
 
@@ -2785,15 +2782,15 @@ void clear_typed_word(void)
 
 void check_typed_word(void)
 {
-	BYTE *keyboard;
+	const Uint8 *keyboard;
 
 	SDL_PumpEvents();
-	keyboard = (unsigned char *)SDL_GetKeyState(NULL);
+	keyboard = SDL_GetKeyboardState(NULL);
 
-	SDLKey i;
+	SDL_Scancode i;
 	int j;
-	for(i=SDLK_a;i<=SDLK_z;i=SDLKey(int(i)+1)) {
-		if (keyboard[i] && !old_keyboard[i]) {
+	for(i=SDL_SCANCODE_A;i<=SDL_SCANCODE_Z;i=SDL_Scancode(int(i)+1)) {
+		if (keyboard[i]) {
 			for(j=15;j>0;j--) last_word[j]=last_word[j-1];
 			last_word[0]=i;
 			return;
@@ -2804,7 +2801,7 @@ void check_typed_word(void)
 
 bool typed_word_p(char *word)
 {
-	char *str,c;
+	char c;
 	int i,l;
 
 	l=strlen(word);
@@ -2812,7 +2809,7 @@ bool typed_word_p(char *word)
 
 	for(i=0;i<l;i++) {
 		c=word[(l-1)-i];
-		str=SDL_GetKeyName(last_word[i]);
+		const char* str=SDL_GetKeyName(last_word[i]);
 		if (str[1]!=0 || str[0]!=c) return false;
 	} /* for */ 
 
@@ -3033,13 +3030,13 @@ void get_palette(void)
 	sprintf(tmp,"%skonami.pcx",g_path);
 	img = IMG_Load(tmp);
 	if (img!=0) {
-		SDL_SetColors(screen, img->format->palette->colors, 0, img->format->palette->ncolors);
+		SDL_SetPaletteColors(screen->format->palette, img->format->palette->colors, 0, img->format->palette->ncolors);
 		SDL_FreeSurface(img);
 	} else {
 		sprintf(tmp,"%skonami.pcx",default_g_path);
 		img = IMG_Load(tmp);
 		if (img!=0) {
-			SDL_SetColors(screen, img->format->palette->colors, 0, img->format->palette->ncolors);
+			SDL_SetPaletteColors(screen->format->palette, img->format->palette->colors, 0, img->format->palette->ncolors);
 			SDL_FreeSurface(img);
 		} /* if */ 
 	} /* if */ 
@@ -3076,73 +3073,73 @@ void ReloadStuff(int dx,int dy)
 void ReloadSound(void)
 {	
 	/* Sonidos: */  
-	S_gamestart=Sound_create_sound("gamestart",0);
-	S_jump=Sound_create_sound("jump",0); 
-	S_sword=Sound_create_sound("sword",0); 
-	S_swordhit=Sound_create_sound("stone_hit",0); 
-	S_item=Sound_create_sound("itemget",0); 
-	S_ah=Sound_create_sound("ah",0); 
-	S_ah2=Sound_create_sound("ah2",0); 
-	S_powerup=Sound_create_sound("powerup",0); 
-	S_enemyhit=Sound_create_sound("enemy_hit",0); 
-	S_skeletonhit=Sound_create_sound("skeleton_hit",0); 
-	S_door=Sound_create_sound("doors",0); 
-	S_enemykill=Sound_create_sound("enemy_kill",0); 
-	S_ladderdisapear=Sound_create_sound("disappear",0); 
-	S_armourhit=Sound_create_sound("sword_armour",0); 
-	S_pause=Sound_create_sound("pause",0); 
-	S_death=Sound_create_sound("death",0); 
-	S_gameover=Sound_create_sound("game_over",0); 
-	S_worldkey=Sound_create_sound("worldkey",0); 
-	S_entering=Sound_create_sound("entering",0); 
-	S_enterwater=Sound_create_sound("enterwater",0); 
-	S_select=Sound_create_sound("select",0); 
-	S_firearrow=Sound_create_sound("firearrow",0); 
-	S_firearrow2=Sound_create_sound("firearrow2",0); 
-	S_fall=Sound_create_sound("fall",0);
-	S_waterhit=Sound_create_sound("waterhit",0);
-	S_lavahit=Sound_create_sound("lavahit",0);
-	S_nocoins=Sound_create_sound("nocoins",0);
-	S_stones=Sound_create_sound("stones",0);
-	S_blob=Sound_create_sound("blob",0);
-	S_shield=Sound_create_sound("shield",0);
-	S_bell=Sound_create_sound("bell",0);
-	S_flapwings=Sound_create_sound("flapwings",0);
-	S_rotatedoor=Sound_create_sound("rotatedoor",0);
-	S_demon2ball=Sound_create_sound("demon2ball",0);
-	S_appearing=Sound_create_sound("appearing",0);
-	S_firebreath=Sound_create_sound("fbreath",0);
-	S_F1=Sound_create_sound("f1",0);
-	S_karrow=Sound_create_sound("knightarrow",0);
-	S_jumptree=Sound_create_sound("jumptree",0);
-	S_enemybullet=Sound_create_sound("enemybullet",0);
-	S_headbullet=Sound_create_sound("headbullet",0);
-	S_firefire=Sound_create_sound("firefire",0);
-	S_dropmine=Sound_create_sound("dropmine",0);
-	S_fireball=Sound_create_sound("fireball",0);
-	S_fireball2=Sound_create_sound("fireball2",0);
-	S_wdoor=Sound_create_sound("wdoor",0);
-	S_door2=Sound_create_sound("door2",0);
-	S_demonhit=Sound_create_sound("demon_hit",0);
-	S_bearbullet=Sound_create_sound("bearbullet",0);
-	S_chickenbomb=Sound_create_sound("chickenbomb",0);
-	S_colormonster=Sound_create_sound("colormonster",0);
-	S_waterstone=Sound_create_sound("waterstone",0);
-	S_demon4jump=Sound_create_sound("demon4jump",0);
-	S_rockman=Sound_create_sound("rockman",0);
-	S_mine=Sound_create_sound("mine",0);
-	S_bible=Sound_create_sound("bible",0);
-	S_demon1bones=Sound_create_sound("demon1bones",0);
-	S_demon1jump=Sound_create_sound("demon1jump",0);
-	S_owl=Sound_create_sound("owl",0);
-	S_demon7bullet=Sound_create_sound("demon7bullet",0);
-	S_demon8bullet=Sound_create_sound("demon8bullet",0);
-	S_flamebullet=Sound_create_sound("flamebullet",0);
-	S_snakebullet=Sound_create_sound("snakebullet",0);
-	S_gorilla=Sound_create_sound("gorilla",0);
-	S_lizardtongue=Sound_create_sound("lizardtongue",0);
-	S_bdemonbullet=Sound_create_sound("bdemonbullet",0);
-	S_lightning=Sound_create_sound("lightning",0);
+	S_gamestart=Sound_create_sound("gamestart");
+	S_jump=Sound_create_sound("jump"); 
+	S_sword=Sound_create_sound("sword"); 
+	S_swordhit=Sound_create_sound("stone_hit"); 
+	S_item=Sound_create_sound("itemget"); 
+	S_ah=Sound_create_sound("ah"); 
+	S_ah2=Sound_create_sound("ah2"); 
+	S_powerup=Sound_create_sound("powerup"); 
+	S_enemyhit=Sound_create_sound("enemy_hit"); 
+	S_skeletonhit=Sound_create_sound("skeleton_hit"); 
+	S_door=Sound_create_sound("doors"); 
+	S_enemykill=Sound_create_sound("enemy_kill"); 
+	S_ladderdisapear=Sound_create_sound("disappear"); 
+	S_armourhit=Sound_create_sound("sword_armour"); 
+	S_pause=Sound_create_sound("pause"); 
+	S_death=Sound_create_sound("death"); 
+	S_gameover=Sound_create_sound("game_over"); 
+	S_worldkey=Sound_create_sound("worldkey"); 
+	S_entering=Sound_create_sound("entering"); 
+	S_enterwater=Sound_create_sound("enterwater"); 
+	S_select=Sound_create_sound("select"); 
+	S_firearrow=Sound_create_sound("firearrow"); 
+	S_firearrow2=Sound_create_sound("firearrow2"); 
+	S_fall=Sound_create_sound("fall");
+	S_waterhit=Sound_create_sound("waterhit");
+	S_lavahit=Sound_create_sound("lavahit");
+	S_nocoins=Sound_create_sound("nocoins");
+	S_stones=Sound_create_sound("stones");
+	S_blob=Sound_create_sound("blob");
+	S_shield=Sound_create_sound("shield");
+	S_bell=Sound_create_sound("bell");
+	S_flapwings=Sound_create_sound("flapwings");
+	S_rotatedoor=Sound_create_sound("rotatedoor");
+	S_demon2ball=Sound_create_sound("demon2ball");
+	S_appearing=Sound_create_sound("appearing");
+	S_firebreath=Sound_create_sound("fbreath");
+	S_F1=Sound_create_sound("f1");
+	S_karrow=Sound_create_sound("knightarrow");
+	S_jumptree=Sound_create_sound("jumptree");
+	S_enemybullet=Sound_create_sound("enemybullet");
+	S_headbullet=Sound_create_sound("headbullet");
+	S_firefire=Sound_create_sound("firefire");
+	S_dropmine=Sound_create_sound("dropmine");
+	S_fireball=Sound_create_sound("fireball");
+	S_fireball2=Sound_create_sound("fireball2");
+	S_wdoor=Sound_create_sound("wdoor");
+	S_door2=Sound_create_sound("door2");
+	S_demonhit=Sound_create_sound("demon_hit");
+	S_bearbullet=Sound_create_sound("bearbullet");
+	S_chickenbomb=Sound_create_sound("chickenbomb");
+	S_colormonster=Sound_create_sound("colormonster");
+	S_waterstone=Sound_create_sound("waterstone");
+	S_demon4jump=Sound_create_sound("demon4jump");
+	S_rockman=Sound_create_sound("rockman");
+	S_mine=Sound_create_sound("mine");
+	S_bible=Sound_create_sound("bible");
+	S_demon1bones=Sound_create_sound("demon1bones");
+	S_demon1jump=Sound_create_sound("demon1jump");
+	S_owl=Sound_create_sound("owl");
+	S_demon7bullet=Sound_create_sound("demon7bullet");
+	S_demon8bullet=Sound_create_sound("demon8bullet");
+	S_flamebullet=Sound_create_sound("flamebullet");
+	S_snakebullet=Sound_create_sound("snakebullet");
+	S_gorilla=Sound_create_sound("gorilla");
+	S_lizardtongue=Sound_create_sound("lizardtongue");
+	S_bdemonbullet=Sound_create_sound("bdemonbullet");
+	S_lightning=Sound_create_sound("lightning");
 } /* ReloadSound */ 
 
 

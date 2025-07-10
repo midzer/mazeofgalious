@@ -23,7 +23,7 @@ extern char **g_paths;
 extern int n_g_paths,act_g_path;
 extern char *g_path;
 
-/* Gráficos: */ 
+/* Grï¿½ficos: */ 
 extern Bitmap *konami_bmp,*menu_bmp,*tiles_bmp,*tiles2_bmp,*enemy_bmp,*enemy2_bmp,*final_bmp;
 extern int n_tiles;
 extern CTile **tiles;
@@ -34,9 +34,9 @@ extern BYTE *col_buffer;
 extern int STATE,SUBSTATE;
 
 /* Juego: */ 
-extern int map;			/* En que mundo está el personaje			*/ 
-extern int map_x,map_y;	/* En que habitación dentro del mundo		*/ 
-extern int pers_x,pers_y;	/* Posición del personaje en la habitación	*/ 
+extern int map;			/* En que mundo estï¿½ el personaje			*/ 
+extern int map_x,map_y;	/* En que habitaciï¿½n dentro del mundo		*/ 
+extern int pers_x,pers_y;	/* Posiciï¿½n del personaje en la habitaciï¿½n	*/ 
 extern int pers_pos;
 extern bool pers_right;	/* Hacia donde mira el personaje			*/ 
 extern int pers_state;		/* Estado en el que se encuentra el personaje	*/ 
@@ -47,10 +47,10 @@ extern bool sword;				/* Hay que dibujar la espada?	*/
 extern bool old_sword;
 extern int sword_x,sword_y;	/* Coordenadas de la espada.	*/ 
 extern int sword_time;
-extern int in_ladder;			/* En qué escalera está el personaje	*/ 
-extern bool previous_x_collision;	/* Hubo una colisión en X en el frame anterior? */ 
-extern bool previous_y_collision;	/* Hubo una colisión en Y en el frame anterior? */ 
-extern int hit_time;	/* Contador para saber cuando pueden dañarnos de nuevo	*/ 
+extern int in_ladder;			/* En quï¿½ escalera estï¿½ el personaje	*/ 
+extern bool previous_x_collision;	/* Hubo una colisiï¿½n en X en el frame anterior? */ 
+extern bool previous_y_collision;	/* Hubo una colisiï¿½n en Y en el frame anterior? */ 
+extern int hit_time;	/* Contador para saber cuando pueden daï¿½arnos de nuevo	*/ 
 extern int character;
 extern int current_weapon;
 extern int n_fired_arrows;
@@ -125,7 +125,7 @@ void ReloadGraphics(int dx,int dy)
 {
 	int i;
 
-	/* Gráficos: */ 
+	/* Grï¿½ficos: */ 
 	konami_bmp=load_bitmap("konami.pcx");
 
 	menu_bmp=load_bitmap("start.pcx");
@@ -345,7 +345,7 @@ void ReloadGraphics(int dx,int dy)
 	tiles[n_tiles++]=new CTile(tiles_bmp, TILE_SIZE_X*8,TILE_SIZE_Y*2, TILE_SIZE_X, TILE_SIZE_Y, 0);
 	tiles[n_tiles++]=new CTile(tiles_bmp, TILE_SIZE_X*9,TILE_SIZE_Y*2, TILE_SIZE_X, TILE_SIZE_Y, 0);
 
-	/* Decoración de mundos: */ 
+	/* Decoraciï¿½n de mundos: */ 
 	tiles[n_tiles++]=new CTile(tiles_bmp, TILE_SIZE_X*33, 0, TILE_SIZE_X,TILE_SIZE_Y, T_WALL);	/* 125 */ 
 	tiles[n_tiles++]=new CTile(tiles_bmp, TILE_SIZE_X*33, TILE_SIZE_Y, TILE_SIZE_X,TILE_SIZE_Y, T_LADDER_WALL);
 
@@ -395,7 +395,7 @@ void ReloadGraphics(int dx,int dy)
 	tiles[n_tiles++]=new CTile(tiles_bmp, TILE_SIZE_X*10, TILE_SIZE_Y*21, TILE_SIZE_X,TILE_SIZE_Y, 0);
 	tiles[n_tiles++]=new CTile(tiles_bmp, TILE_SIZE_X*11, TILE_SIZE_Y*21, TILE_SIZE_X,TILE_SIZE_Y, 0);
 
-	/* Más personajes de los passages: */ 
+	/* Mï¿½s personajes de los passages: */ 
 	/* ATHENA */ 
 	tiles[n_tiles++]=new CTile(tiles_bmp, TILE_SIZE_X*32, TILE_SIZE_Y*17, TILE_SIZE_X*2,TILE_SIZE_Y*2, 0); /* 161 */ 
 
@@ -410,11 +410,11 @@ void ReloadGraphics(int dx,int dy)
 	/* Muro atravesable: */ 
 	tiles[n_tiles++]=new CTile(tiles_bmp,          0,TILE_SIZE_Y*4, TILE_SIZE_X, TILE_SIZE_Y, T_NADA);	/* 166 */ 
 
-	/* Aún más personajes de los passages: */ 
+	/* Aï¿½n mï¿½s personajes de los passages: */ 
 	/* DEATH */ 
 	tiles[n_tiles++]=new CTile(tiles_bmp, TILE_SIZE_X*16, TILE_SIZE_Y*20, TILE_SIZE_X*2,TILE_SIZE_Y*2, 0); /* 167 */ 
 
-	/* Fuego (animación): */ 
+	/* Fuego (animaciï¿½n): */ 
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X*34, TILE_SIZE_Y*21, TILE_SIZE_X,TILE_SIZE_Y, T_LAVA); /* 168 */ 
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X*35, TILE_SIZE_Y*21, TILE_SIZE_X,TILE_SIZE_Y, T_LAVA); /* 169 */ 
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X*36, TILE_SIZE_Y*21, TILE_SIZE_X,TILE_SIZE_Y, T_LAVA); /* 170 */ 
@@ -425,7 +425,7 @@ void ReloadGraphics(int dx,int dy)
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X*36, TILE_SIZE_Y*21, TILE_SIZE_X,TILE_SIZE_Y, T_LAVA); /* 175 */ 
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X*35, TILE_SIZE_Y*21, TILE_SIZE_X,TILE_SIZE_Y, T_LAVA); /* 176 */ 
 
-	/* Todavía más personajes de los passages: */ 
+	/* Todavï¿½a mï¿½s personajes de los passages: */ 
 	/* HEPHAESTUS */ 
 	tiles[n_tiles++]=new CTile(tiles_bmp, 0, TILE_SIZE_Y*23, TILE_SIZE_X*2,TILE_SIZE_Y*2, 0); /* 177 */ 
 	/* ASCLEPIUS */ 
@@ -468,7 +468,7 @@ void ReloadGraphics(int dx,int dy)
 	/* Transportadores: */ 
 	lever_tile=n_tiles;
 	/* Este tile tiene 2 flags, T_WALL y T_LADDER_WALL, sirve para indicar el caso especial de que	*/ 
-	/* las flechas no deben chocar con él!															*/ 
+	/* las flechas no deben chocar con ï¿½l!															*/ 
 	tiles[n_tiles++]=new CTile(tiles2_bmp, 0,TILE_SIZE_Y*16,TILE_SIZE_X*4,TILE_SIZE_Y*2, T_WALL|T_LADDER_WALL);
 
 	/* Personaje: --------------------- */ 
@@ -497,7 +497,7 @@ void ReloadGraphics(int dx,int dy)
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X*36,TILE_SIZE_Y*10,TILE_SIZE_X*2,TILE_SIZE_Y*2, T_PLAYER,1*TILE_UNIT,0);
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X*38,TILE_SIZE_Y*10,TILE_SIZE_X*2,TILE_SIZE_Y*2, T_PLAYER,1*TILE_UNIT,0);
 
-	/* Máscara */ 
+	/* Mï¿½scara */ 
 	tiles[n_tiles++]=new CTile(tiles_bmp,             0,TILE_SIZE_Y*17,TILE_SIZE_X*2,TILE_SIZE_Y*2, T_PLAYER);	/* MASCARAS */ 
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X* 2,TILE_SIZE_Y*17,TILE_SIZE_X*2,TILE_SIZE_Y*2, T_PLAYER);
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X* 4,TILE_SIZE_Y*17,TILE_SIZE_X*2,TILE_SIZE_Y*2, T_PLAYER);
@@ -591,7 +591,7 @@ void ReloadGraphics(int dx,int dy)
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X*36,TILE_SIZE_Y*6,TILE_SIZE_X*2,TILE_SIZE_Y*2, T_PLAYER,1*TILE_UNIT,0);
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X*38,TILE_SIZE_Y*6,TILE_SIZE_X*2,TILE_SIZE_Y*2, T_PLAYER,1*TILE_UNIT,0);
 
-	/* Máscara */ 
+	/* Mï¿½scara */ 
 	tiles[n_tiles++]=new CTile(tiles_bmp,             0,TILE_SIZE_Y*17,TILE_SIZE_X*2,TILE_SIZE_Y*2, T_PLAYER);	/* MASCARAS */ 
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X* 2,TILE_SIZE_Y*17,TILE_SIZE_X*2,TILE_SIZE_Y*2, T_PLAYER);
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X* 4,TILE_SIZE_Y*17,TILE_SIZE_X*2,TILE_SIZE_Y*2, T_PLAYER);
@@ -768,7 +768,7 @@ void ReloadGraphics(int dx,int dy)
 	/* Felchas: +14 */ 
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X*6,TILE_SIZE_Y*7,TILE_SIZE_X*2,TILE_SIZE_Y*1,T_NADA);
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X*4,TILE_SIZE_Y*7,TILE_SIZE_X*2,TILE_SIZE_Y*1,T_NADA);
-	/* Flechas de cerámica: +16 */ 
+	/* Flechas de cerï¿½mica: +16 */ 
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X*6,TILE_SIZE_Y*8,TILE_SIZE_X*2,TILE_SIZE_Y*1,T_NADA);
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X*2,TILE_SIZE_Y*7,TILE_SIZE_X*2,TILE_SIZE_Y*1,T_NADA);
 	/* Fuego: +18 */ 
@@ -874,7 +874,7 @@ void ReloadGraphics(int dx,int dy)
 	tiles[n_tiles++]=new CTile(enemy_bmp,TILE_SIZE_X*14,TILE_SIZE_Y*8,TILE_SIZE_X*2,TILE_SIZE_Y*2,T_ENEMY);
 	tiles[n_tiles++]=new CTile(enemy_bmp,TILE_SIZE_X*34,TILE_SIZE_Y*2,TILE_SIZE_X*2,TILE_SIZE_Y*2,T_ENEMY);
 
-	/* Bambú: */ 
+	/* Bambï¿½: */ 
 	bambu_tile=n_tiles;
 	tiles[n_tiles++]=new CTile(enemy_bmp,TILE_SIZE_X*26,TILE_SIZE_Y*2,TILE_SIZE_X*2,TILE_SIZE_Y*2,0);
 	tiles[n_tiles++]=new CTile(enemy_bmp,TILE_SIZE_X*28,TILE_SIZE_Y*2,TILE_SIZE_X*2,TILE_SIZE_Y*2,T_ENEMY);
@@ -907,7 +907,7 @@ void ReloadGraphics(int dx,int dy)
 	tiles[n_tiles++]=new CTile(tiles2_bmp,TILE_SIZE_X*15,TILE_SIZE_Y*12,TILE_SIZE_X/2,TILE_SIZE_Y/2,0);
 	tiles[n_tiles++]=new CTile(tiles2_bmp,TILE_SIZE_X*15+TILE_SIZE_X/2,TILE_SIZE_Y*12,TILE_SIZE_X/2,TILE_SIZE_Y/2,0);
 
-	/* Puercoespín: */ 
+	/* Puercoespï¿½n: */ 
 	porcupine_tile=n_tiles;
 	tiles[n_tiles++]=new CTile(enemy_bmp,TILE_SIZE_X*18,TILE_SIZE_Y*4,TILE_SIZE_X*2,TILE_SIZE_Y*2,T_ENEMY);
 	tiles[n_tiles++]=new CTile(enemy_bmp,TILE_SIZE_X*20,TILE_SIZE_Y*4,TILE_SIZE_X*2,TILE_SIZE_Y*2,T_ENEMY);
@@ -928,11 +928,11 @@ void ReloadGraphics(int dx,int dy)
 	tiles[n_tiles++]=new CTile(enemy_bmp,TILE_SIZE_X*12,TILE_SIZE_Y*10,TILE_SIZE_X*2,TILE_SIZE_Y*2,T_ENEMY);
 	tiles[n_tiles++]=new CTile(enemy_bmp,TILE_SIZE_X*12,TILE_SIZE_Y*12,TILE_SIZE_X*2,TILE_SIZE_Y*2,T_ENEMY);
 
-	/* Arbusto saltarín: */ 
+	/* Arbusto saltarï¿½n: */ 
 	jumpingbush_tile=n_tiles;
 	tiles[n_tiles++]=new CTile(enemy_bmp,0,TILE_SIZE_Y*8,TILE_SIZE_X*2,TILE_SIZE_Y*2,T_ENEMY);
 
-	/* Araña azul: */ 
+	/* Araï¿½a azul: */ 
 	bluespider_tile=n_tiles;
 	tiles[n_tiles++]=new CTile(enemy_bmp,0,TILE_SIZE_Y*12,TILE_SIZE_X*2,TILE_SIZE_Y*2,T_ENEMY);
 	tiles[n_tiles++]=new CTile(enemy_bmp,TILE_SIZE_X*2,TILE_SIZE_Y*12,TILE_SIZE_X*2,TILE_SIZE_Y*2,T_ENEMY);
@@ -995,7 +995,7 @@ void ReloadGraphics(int dx,int dy)
 	tiles[n_tiles++]=new CTile(enemy_bmp,TILE_SIZE_X*36,TILE_SIZE_Y*5,TILE_SIZE_X*2,TILE_SIZE_Y*1,T_ENEMY);
 	tiles[n_tiles++]=new CTile(enemy_bmp,TILE_SIZE_X*38,TILE_SIZE_Y*5,TILE_SIZE_X*2,TILE_SIZE_Y*1,T_ENEMY);
 
-	/* Pirañas: */ 
+	/* Piraï¿½as: */ 
 	piranha_tile=n_tiles;
 	tiles[n_tiles++]=new CTile(enemy_bmp,TILE_SIZE_X*14,TILE_SIZE_Y*10,TILE_SIZE_X*2,TILE_SIZE_Y*2,T_ENEMY);
 	tiles[n_tiles++]=new CTile(enemy_bmp,TILE_SIZE_X*16,TILE_SIZE_Y*10,TILE_SIZE_X*2,TILE_SIZE_Y*2,T_ENEMY);
@@ -1008,7 +1008,7 @@ void ReloadGraphics(int dx,int dy)
 	tiles[n_tiles++]=new CTile(enemy_bmp,TILE_SIZE_X*18,TILE_SIZE_Y*10,TILE_SIZE_X*2,TILE_SIZE_Y*2,T_ENEMY);
 	tiles[n_tiles++]=new CTile(enemy_bmp,TILE_SIZE_X*20,TILE_SIZE_Y*10,TILE_SIZE_X*2,TILE_SIZE_Y*2,T_ENEMY);
 
-	/* Arañas: */ 
+	/* Araï¿½as: */ 
 	spider_tile=n_tiles;
 	tiles[n_tiles++]=new CTile(enemy_bmp,TILE_SIZE_X*37,TILE_SIZE_Y*10,TILE_SIZE_X,TILE_SIZE_Y*3,T_ENEMY);
 	tiles[n_tiles++]=new CTile(enemy_bmp,TILE_SIZE_X*37,TILE_SIZE_Y*13,TILE_SIZE_X,TILE_SIZE_Y*3,T_ENEMY);
@@ -1338,7 +1338,7 @@ void ReloadGraphics(int dx,int dy)
 	tiles[n_tiles++]=new CTile(tiles2_bmp,TILE_SIZE_X*35,0,TILE_SIZE_X*3,TILE_SIZE_Y*3,0);
 	tiles[n_tiles++]=new CTile(tiles2_bmp,TILE_SIZE_X*38,0,TILE_SIZE_X*2,TILE_SIZE_Y*3,0);
 
-	/* Tiles de colisión: */ 
+	/* Tiles de colisiï¿½n: */ 
 	colision_tile=n_tiles;
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X*18,TILE_SIZE_Y*17,TILE_SIZE_X*2,TILE_SIZE_Y*2,0);
 	tiles[n_tiles++]=new CTile(tiles_bmp,TILE_SIZE_X*18,TILE_SIZE_Y*19,TILE_SIZE_X*2,TILE_SIZE_Y*2,0);

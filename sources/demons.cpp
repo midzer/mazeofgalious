@@ -24,7 +24,7 @@ extern char **s_paths;
 extern int n_s_paths,act_s_path;
 extern char *s_path;
 
-/* Gráficos: */ 
+/* Grï¿½ficos: */ 
 Bitmap *demon_bmp=0,*back_bmp=0;
 extern Bitmap *konami_bmp,*menu_bmp,*tiles_bmp,*tiles2_bmp,*enemy_bmp;
 extern int n_tiles;
@@ -36,9 +36,9 @@ extern BYTE *col_buffer;
 extern int STATE,SUBSTATE;
 
 /* Juego: */ 
-extern int map;			/* En que mundo está el personaje			*/ 
-extern int map_x,map_y;	/* En que habitación dentro del mundo		*/ 
-extern int pers_x,pers_y;	/* Posición del personaje en la habitación	*/ 
+extern int map;			/* En que mundo estï¿½ el personaje			*/ 
+extern int map_x,map_y;	/* En que habitaciï¿½n dentro del mundo		*/ 
+extern int pers_x,pers_y;	/* Posiciï¿½n del personaje en la habitaciï¿½n	*/ 
 extern int pers_pos;
 extern bool pers_right;	/* Hacia donde mira el personaje			*/ 
 extern int pers_state;		/* Estado en el que se encuentra el personaje	*/ 
@@ -49,10 +49,10 @@ extern bool sword;				/* Hay que dibujar la espada?	*/
 extern bool old_sword;
 extern int sword_x,sword_y;	/* Coordenadas de la espada.	*/ 
 extern int sword_time;
-extern int in_ladder;			/* En qué escalera está el personaje	*/ 
-extern bool previous_x_collision;	/* Hubo una colisión en X en el frame anterior? */ 
-extern bool previous_y_collision;	/* Hubo una colisión en Y en el frame anterior? */ 
-extern int hit_time;	/* Contador para saber cuando pueden dañarnos de nuevo	*/ 
+extern int in_ladder;			/* En quï¿½ escalera estï¿½ el personaje	*/ 
+extern bool previous_x_collision;	/* Hubo una colisiï¿½n en X en el frame anterior? */ 
+extern bool previous_y_collision;	/* Hubo una colisiï¿½n en Y en el frame anterior? */ 
+extern int hit_time;	/* Contador para saber cuando pueden daï¿½arnos de nuevo	*/ 
 extern int character;
 extern bool live_character[2];
 extern int current_weapon;
@@ -193,7 +193,7 @@ void demon_intro(int state,unsigned char *screen,int dx,int dy)
 		} /* for */ 
 	} /* if */ 
 
-	/* Hacer desaparecer el símbolo del monstruo: */ 
+	/* Hacer desaparecer el sï¿½mbolo del monstruo: */ 
 	if (state>=64 && state<96) {
 		int tx,ty;
 		int step;
@@ -446,7 +446,7 @@ void demon1_cycle(void)
 	} /* if */ 
 
 	if (object[demon_obj].y<TILE_SIZE_Y*8) {
-		/* Está volando: */ 
+		/* Estï¿½ volando: */ 
 		object[demon_obj].state=demon_tile+2+((object[demon_obj].state2>>2)&0x01);
 		if (object[demon_obj].state2<=0 && object[demon_obj].state3==1) {
 			if (rand()%2==0) {
@@ -1158,7 +1158,7 @@ void demon6_cycle(void)
 				/* Disparar: */ 
 				Sound_play(S_demon2ball);
 				{
-					/* Calcular el ángulo del personaje: */ 
+					/* Calcular el ï¿½ngulo del personaje: */ 
 					float angle;
 					float dx,dy;
 					const float PI=3.141592F;
@@ -1167,7 +1167,7 @@ void demon6_cycle(void)
 					dy=float(pers_y-(object[demon_obj].y));
 					angle=float(atan2(dy,dx));
 
-					/* Disparar unas cuantas bolas, con diferentes ángulos: */ 
+					/* Disparar unas cuantas bolas, con diferentes ï¿½ngulos: */ 
 					int presets[4][6]={ {-8,-6,-2,2,4,8},
 										{-8,-2, 0,2,6,8},
 										{-8,-4,-2,0,2,8},
@@ -1253,7 +1253,7 @@ void demon7_cycle(void)
 	object[demon_obj].state2++;
 			
 	switch(object[demon_obj].state) {
-	case 0:/* Boca cerrada, está a punto de abrirla: */ 
+	case 0:/* Boca cerrada, estï¿½ a punto de abrirla: */ 
 		object[demon_obj].tile=0;
 		if (object[demon_obj].state2>=16) {
 			object[demon_obj].state=1;
@@ -1366,7 +1366,7 @@ void demon7_cycle(void)
 			object[demon_obj].state2=0;
 		} /* if */ 
 		break;
-	case 2:/* Después de disparar, momento de descanso: */ 
+	case 2:/* Despuï¿½s de disparar, momento de descanso: */ 
 		if (object[demon_obj].state2<64) object[demon_obj].tile=1;
 		if (object[demon_obj].state2>=64 && object[demon_obj].state2<96) object[demon_obj].tile=2;
 		if (object[demon_obj].state2>=96 && object[demon_obj].state2<128) object[demon_obj].tile=1;

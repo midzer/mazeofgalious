@@ -15,7 +15,7 @@
 #include "object.h"
 
 
-/* Gráficos: */ 
+/* Grï¿½ficos: */ 
 extern Bitmap *konami_bmp,*menu_bmp,*tiles_bmp,*enemy_bmp;
 extern int n_tiles;
 extern CTile **tiles;
@@ -27,9 +27,9 @@ extern int STATE,SUBSTATE;
 extern int cycle;
 
 /* Juego: */ 
-extern int map;			/* En que mundo está el personaje			*/ 
-extern int map_x,map_y;	/* En que habitación dentro del mundo		*/ 
-extern int pers_x,pers_y;	/* Posición del personaje en la habitación	*/ 
+extern int map;			/* En que mundo estï¿½ el personaje			*/ 
+extern int map_x,map_y;	/* En que habitaciï¿½n dentro del mundo		*/ 
+extern int pers_x,pers_y;	/* Posiciï¿½n del personaje en la habitaciï¿½n	*/ 
 extern int pers_pos;
 extern bool pers_right;	/* Hacia donde mira el personaje			*/ 
 extern int pers_state;		/* Estado en el que se encuentra el personaje	*/ 
@@ -38,13 +38,12 @@ extern int pers_walk_state;	/* Variable que controla el caminar.	*/
 extern int jump_inertia;
 extern bool sword;				/* Hay que dibujar la espada?	*/ 
 extern bool old_sword;
-extern unsigned char old_keyboard[SDLK_LAST];
 extern int sword_x,sword_y;	/* Coordenadas de la espada.	*/ 
 extern int sword_time;
-extern int in_ladder;			/* En qué escalera está el personaje	*/ 
-extern bool previous_x_collision;	/* Hubo una colisión en X en el frame anterior? */ 
-extern bool previous_y_collision;	/* Hubo una colisión en Y en el frame anterior? */ 
-extern int hit_time;	/* Contador para saber cuando pueden dañarnos de nuevo	*/ 
+extern int in_ladder;			/* En quï¿½ escalera estï¿½ el personaje	*/ 
+extern bool previous_x_collision;	/* Hubo una colisiï¿½n en X en el frame anterior? */ 
+extern bool previous_y_collision;	/* Hubo una colisiï¿½n en Y en el frame anterior? */ 
+extern int hit_time;	/* Contador para saber cuando pueden daï¿½arnos de nuevo	*/ 
 extern int character;
 extern bool live_character[2];
 extern int current_weapon;
@@ -162,8 +161,8 @@ extern int zoom;
 
 
 /* Teclas: */ 
-extern SDLKey UP_KEY,DOWN_KEY,LEFT_KEY,RIGHT_KEY;
-extern SDLKey SWORD_KEY,WEAPON_KEY,ITEM_KEY,PAUSE_KEY;
+extern SDL_Scancode UP_KEY,DOWN_KEY,LEFT_KEY,RIGHT_KEY;
+extern SDL_Scancode SWORD_KEY,WEAPON_KEY,ITEM_KEY,PAUSE_KEY;
 
 void ActualizeLevers(int dx,int dy)
 {
@@ -234,7 +233,7 @@ void ActualizeLevers(int dx,int dy)
 
 	} /* for */ 
 
-	/* Corregir la posición de la espada: */ 
+	/* Corregir la posiciï¿½n de la espada: */ 
 	if (sword) {
 		sword_x+=pers_x-old_x;
 		sword_y+=pers_y-old_y;
@@ -247,13 +246,13 @@ void GameTestInteractions(int dx,int dy)
 {
 	int i,j,val;
 	bool hit=false;
-	unsigned char *keyboard;
+	const Uint8 *keyboard;
 	int enemy_killed=false;
 
 	for(i=0;i<MAX_OBJECTS;i++) todelete[i]=false;
 
 	SDL_PumpEvents();
-	keyboard = (unsigned char *)SDL_GetKeyState(NULL);
+	keyboard = SDL_GetKeyboardState(NULL);
 
 	if (sword && !old_sword) hit=true;
 	old_sword=sword; 
@@ -1348,7 +1347,7 @@ void GameTestInteractions(int dx,int dy)
 						coltest(object[i].draw_x,object[i].draw_y,
 							TILE_SIZE_X*2,TILE_SIZE_Y*2,col_buffer,dx,dy,dx)&T_WEAPON)!=0 &&
 					!enemy_killed) {
-					/* Hueso pequeño tocado!! */ 
+					/* Hueso pequeï¿½o tocado!! */ 
 					enemy_killed=true;
 					test_if_weapon_colision(demon_tile+12+(object[i].state2>>1),object[i].draw_x,object[i].draw_y);
 					object[i].type=T_EXPLOSION;
@@ -1593,7 +1592,7 @@ void GameTestInteractions(int dx,int dy)
 						coltest(object[i].draw_x,object[i].draw_y,
 								col_buffer,dx,dy,dx)&T_WEAPON)!=0 &&
 					cross) {
-					/* Décimo monstruo tocado: */ 
+					/* Dï¿½cimo monstruo tocado: */ 
 					int obj_type;
 					int obj=test_if_weapon_colision(object[i].base_tile+object[i].tile+2,
 													object[i].draw_x,object[i].draw_y,&obj_type);
@@ -2021,7 +2020,7 @@ void GameTestInteractions(int dx,int dy)
 				bool need_salt=false;
 
 				if (pers_x>=(object[i].x-4*TILE_UNIT) && pers_x<=(object[i].x+4*TILE_UNIT) &&
-					pers_y==object[i].y && keyboard[DOWN_KEY] && !old_keyboard[DOWN_KEY] && to_enter_cut==0 &&
+					pers_y==object[i].y && keyboard[DOWN_KEY] && to_enter_cut==0 &&
 					pers_state!=S_DEATH) {
 					if (map_x==11 && map_y==10 && map==0) need_salt=true;
 
@@ -2170,10 +2169,10 @@ void GameTestInteractions(int dx,int dy)
 
 void GameRoomEvents()
 {
-	unsigned char *keyboard;
+	const Uint8 *keyboard;
 
 	SDL_PumpEvents();
-	keyboard = (unsigned char *)SDL_GetKeyState(NULL);
+	keyboard = SDL_GetKeyboardState(NULL);
 
 	if (room_slimes) {
 		/* ORUGAS: */ 
@@ -2454,7 +2453,7 @@ void GameRoomEvents()
 		if (!in_water && (rand()%100)==0 && piranhas_counter==0) {
 			int i;
 			int xtmp;
-			/* Sale una piraña: */ 
+			/* Sale una piraï¿½a: */ 
 			piranhas_counter=200;
 			xtmp=2*TILE_SIZE_X+(rand()%(TILE_SIZE_X*22));
 			i=add_object(T_ENEMY,xtmp,14*TILE_SIZE_Y,1,T_PIRANHA,(xtmp<16*TILE_SIZE_X ? 0 : 2));
@@ -2811,7 +2810,7 @@ void GameRoomEvents()
 	} /* if */ 
 
 	if (map==2 && map_x==5 && map_y==1) {
-		/* Puente que aparece con la muñeca: */ 
+		/* Puente que aparece con la muï¿½eca: */ 
 		if (item[5] && room_tiles[8+room_size_x*7]!=162) {
 			int i;
 			for(i=8;i<24;i++) room_tiles[i+room_size_x*7]=162;
@@ -3475,7 +3474,7 @@ void GameRoomEvents()
 		} /* for */ 
 
 		if (!found) {
-			/* Hacer que la puerta esté detrás de todo: */ 
+			/* Hacer que la puerta estï¿½ detrï¿½s de todo: */ 
 			for(i=n_objects;i>0;i--) {
 				object[i]=object[i-1];
 			} /* if */ 
@@ -3517,7 +3516,7 @@ void fire_arrow()
 		 (current_weapon!=5 && n_fired_arrows<MAX_FIRED_ARROWS[character]))) {
 		switch(current_weapon) {
 		case 0:/* FLECHAS NORMALES: */ 
-			/* Al tener el "ROD", el número de flechas no disminuye: */ 
+			/* Al tener el "ROD", el nï¿½mero de flechas no disminuye: */ 
 			if (fighting_demon!=0 && world_item[map-1][2]) n_arrows++;
 			n_arrows--;
 			n_fired_arrows++;
@@ -3526,7 +3525,7 @@ void fire_arrow()
 			Sound_play(S_firearrow);
 			break;
 		case 1:/* FLECHAS DE CERAMICA: */ 
-			/* Al tener el "ROD", el número de flechas no disminuye: */ 
+			/* Al tener el "ROD", el nï¿½mero de flechas no disminuye: */ 
 			if (fighting_demon!=0 && world_item[map-1][2]) n_arrows++;
 			n_arrows--;
 			n_fired_arrows++;
@@ -3673,7 +3672,7 @@ void tile_anims(Bitmap *tiles,int dx,int dy)
 	char *img,tmp;
 	int disp[TILE_SIZE_Y]={1,1,2,2,2,2,3,3,3,3,4,4,4,4,4,4};
 
-	/* Animación del agua: */ 
+	/* Animaciï¿½n del agua: */ 
 	/* Tile agua: 19,3	*/ 
 	img=tiles->get_image();
 

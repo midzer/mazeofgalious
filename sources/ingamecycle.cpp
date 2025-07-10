@@ -17,7 +17,7 @@
 
 // FILE *fp2;
 
-/* Gráficos: */ 
+/* Grï¿½ficos: */ 
 extern Bitmap *konami_bmp,*menu_bmp,*tiles_bmp,*enemy_bmp;
 extern int n_tiles;
 extern CTile **tiles;
@@ -30,9 +30,9 @@ extern int STATE,SUBSTATE;
 extern int cycle;
 
 /* Juego: */ 
-extern int map;			/* En que mundo está el personaje			*/ 
-extern int map_x,map_y;	/* En que habitación dentro del mundo		*/ 
-extern int pers_x,pers_y;	/* Posición del personaje en la habitación	*/ 
+extern int map;			/* En que mundo estï¿½ el personaje			*/ 
+extern int map_x,map_y;	/* En que habitaciï¿½n dentro del mundo		*/ 
+extern int pers_x,pers_y;	/* Posiciï¿½n del personaje en la habitaciï¿½n	*/ 
 extern int pers_pos;
 extern bool pers_right;	/* Hacia donde mira el personaje			*/ 
 extern int pers_state;		/* Estado en el que se encuentra el personaje	*/ 
@@ -43,11 +43,10 @@ extern bool sword;				/* Hay que dibujar la espada?	*/
 extern bool old_sword;
 extern int sword_x,sword_y;	/* Coordenadas de la espada.	*/ 
 extern int sword_time;
-extern unsigned char old_keyboard[SDLK_LAST];
-extern int in_ladder;			/* En qué escalera está el personaje	*/ 
-extern bool previous_x_collision;	/* Hubo una colisión en X en el frame anterior? */ 
-extern bool previous_y_collision;	/* Hubo una colisión en Y en el frame anterior? */ 
-extern int hit_time;	/* Contador para saber cuando pueden dañarnos de nuevo	*/ 
+extern int in_ladder;			/* En quï¿½ escalera estï¿½ el personaje	*/ 
+extern bool previous_x_collision;	/* Hubo una colisiï¿½n en X en el frame anterior? */ 
+extern bool previous_y_collision;	/* Hubo una colisiï¿½n en Y en el frame anterior? */ 
+extern int hit_time;	/* Contador para saber cuando pueden daï¿½arnos de nuevo	*/ 
 extern int character;
 extern int freezed;
 extern bool live_character[2];
@@ -127,8 +126,8 @@ extern int zoom;
 
 
 /* Teclas: */ 
-extern SDLKey UP_KEY,DOWN_KEY,LEFT_KEY,RIGHT_KEY;
-extern SDLKey SWORD_KEY,WEAPON_KEY,ITEM_KEY,PAUSE_KEY;
+extern SDL_Scancode UP_KEY,DOWN_KEY,LEFT_KEY,RIGHT_KEY;
+extern SDL_Scancode SWORD_KEY,WEAPON_KEY,ITEM_KEY,PAUSE_KEY;
 
 
 
@@ -148,11 +147,11 @@ void GameInGameCycle(int dx,int dy)
 	bool escalera_up=false,escalera_down=false;
 	int escalera_up_i=0,escalera_down_i=0;
 	int colision;
-	unsigned char *keyboard;
+	const Uint8 *keyboard;
 	bool invert_move=false;
 
 	if (map==8 && !item[6]) {
-		SDLKey tmp;
+		SDL_Scancode tmp;
 		invert_move=true;
 
 		tmp=LEFT_KEY;
@@ -161,9 +160,9 @@ void GameInGameCycle(int dx,int dy)
 	} /* if */ 
 
 	SDL_PumpEvents();
-	keyboard = (unsigned char *)SDL_GetKeyState(NULL);
+	keyboard = SDL_GetKeyboardState(NULL);
 
-	/* Mascara de colisión: */ 
+	/* Mascara de colisiï¿½n: */ 
 	if (in_ladder==-1) colision=T_WALL|T_LADDER_WALL|T_DOOR_WALL;
 				  else colision=T_WALL|T_DOOR_WALL;
 
@@ -173,7 +172,7 @@ void GameInGameCycle(int dx,int dy)
 		pers_pos=0;
 	} /* if */ 
 
-	/* Determinar si se está en posición de subir escalera: */ 
+	/* Determinar si se estï¿½ en posiciï¿½n de subir escalera: */ 
 	if (pers_state==S_QUIET || pers_state==S_WALKING_RIGHT || pers_state==S_WALKING_LEFT) {
 		for(i=0;i<n_objects;i++) {
 			if (object[i].type==T_LADDER) {
@@ -192,7 +191,7 @@ void GameInGameCycle(int dx,int dy)
 		} /* for */ 
 	} /* if */ 
 
-	/* Determinar si se ha chocado con algún enemigo: */ 
+	/* Determinar si se ha chocado con algï¿½n enemigo: */ 
 	if (pers_state!=S_ENTERING_PASSAGE &&
 		pers_state!=S_ENTERING_WORLD) {
 		if (hit_time>0) hit_time--;
@@ -227,7 +226,7 @@ void GameInGameCycle(int dx,int dy)
 
 			if (!pers_right) xoffs=-2*TILE_UNIT;
 
-			/* Colisión con enemigo!!!! */ 
+			/* Colisiï¿½n con enemigo!!!! */ 
 			izq_col=((tiles[colision_tile]->
 						coltest(GAME_VIEW_X+pers_x+xoffs,GAME_VIEW_Y+pers_y,
 							TILE_SIZE_X*2,TILE_SIZE_Y*2,col_buffer,dx,dy,dx)&T_ENEMY)!=0);
@@ -627,7 +626,7 @@ void GameInGameCycle(int dx,int dy)
 	} /* if */ 
 
 
-	/* Determinar si está en el agua: */ 
+	/* Determinar si estï¿½ en el agua: */ 
 	if (pers_right) val=character_tile[character];
 			   else val=character_tile_inv[character];
 	if ((tiles[val+pers_pos]->
@@ -659,7 +658,7 @@ void GameInGameCycle(int dx,int dy)
 //		water_counter=0;
 	} /* if */ 
 
-	/* Determinar si está en la lava: */ 
+	/* Determinar si estï¿½ en la lava: */ 
 	in_lava=false;
 	if (pers_right) val=character_tile[character];
 			   else val=character_tile_inv[character];
@@ -689,8 +688,7 @@ void GameInGameCycle(int dx,int dy)
 
 
 	if (item[19] &&
-		((keyboard[SDLK_LCTRL] && !old_keyboard[SDLK_LCTRL]) ||
-		 (keyboard[SDLK_RCTRL] && !old_keyboard[SDLK_RCTRL])) &&
+		(keyboard[SDL_SCANCODE_LCTRL] || keyboard[SDL_SCANCODE_RCTRL]) &&
 		bible_counter>0 && bible_subcounter==0) {
 		bible_counter--;
 		bible_subcounter=128;
@@ -739,22 +737,22 @@ void GameInGameCycle(int dx,int dy)
 						pers_right=true;
 					} /* if */ 
 				} /* if */ 
-				if (keyboard[UP_KEY] && !old_keyboard[UP_KEY] && !escalera_up && !in_lava) {
+				if (keyboard[UP_KEY] && !escalera_up && !in_lava) {
 					pers_state=S_JUMPING;
 					if (character_over_vertical_lever) jumping_from_elevator=true;
 					pers_substate=0;
 					jump_inertia=0;
-					if (keyboard[LEFT_KEY] && !old_keyboard[RIGHT_KEY]) jump_inertia=-1;
-					if (keyboard[RIGHT_KEY] && !old_keyboard[LEFT_KEY]) jump_inertia=1;
+					if (keyboard[LEFT_KEY]) jump_inertia=-1;
+					if (keyboard[RIGHT_KEY]) jump_inertia=1;
 					Sound_play(S_jump); 
 				} /* if */ 
-				if (keyboard[UP_KEY] && !old_keyboard[UP_KEY] && escalera_up) {
+				if (keyboard[UP_KEY] && escalera_up) {
 					pers_state=S_UP_LADDER;
 					pers_substate=0;
 					next_x=object[escalera_up_i].x;
 					in_ladder=escalera_up_i;
 				} /* if */ 
-				if (keyboard[DOWN_KEY] && !old_keyboard[DOWN_KEY] && escalera_down && pers_state!=S_JUMPING) {
+				if (keyboard[DOWN_KEY] && escalera_down && pers_state!=S_JUMPING) {
 					pers_state=S_DOWN_LADDER;
 					pers_substate=0;
 					next_x=object[escalera_down_i].x;
@@ -769,7 +767,7 @@ void GameInGameCycle(int dx,int dy)
 					pers_substate=0;
 					pers_pos=0;
 				} /* if */ 
-				if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY] && !in_lava) {
+				if (keyboard[SWORD_KEY] && !in_lava) {
 					Sound_play(S_sword);
 					if (pers_state==S_UNCONTROLED_FALL) {
 						pers_state=S_UC_FALL_SWORD;
@@ -789,7 +787,7 @@ void GameInGameCycle(int dx,int dy)
 						pers_pos=3;
 					} /* if */ 
 				} /* if */ 
-				if (keyboard[WEAPON_KEY] && !old_keyboard[WEAPON_KEY]) fire_arrow(); 
+				if (keyboard[WEAPON_KEY]) fire_arrow(); 
 				break;
 		case S_WALKING_RIGHT:
 				if (in_water) {
@@ -805,7 +803,7 @@ void GameInGameCycle(int dx,int dy)
 				if (pers_substate<4) pers_pos=1;
 				if (pers_substate>=4) pers_pos=0;
 
-				if (keyboard[RIGHT_KEY] && !old_keyboard[LEFT_KEY]) pers_walk_state=0;
+				if (keyboard[RIGHT_KEY]) pers_walk_state=0;
 
 				if (keyboard[LEFT_KEY] && pers_walk_state==0) pers_state=S_WALKING_LEFT;
 
@@ -813,20 +811,20 @@ void GameInGameCycle(int dx,int dy)
 					if (!keyboard[LEFT_KEY]) pers_state=S_QUIET;
 										else pers_state=S_WALKING_LEFT;
 				} /* if */ 
-				if (keyboard[UP_KEY] && !old_keyboard[UP_KEY] && !escalera_up && !in_lava) {
+				if (keyboard[UP_KEY] && !escalera_up && !in_lava) {
 					Sound_play(S_jump);
 					pers_state=S_JUMPING;
 					if (character_over_vertical_lever) jumping_from_elevator=true;
 					pers_substate=0;
 					jump_inertia=1;
 				} /* if */ 
-				if (keyboard[UP_KEY] && !old_keyboard[UP_KEY] && escalera_up) {
+				if (keyboard[UP_KEY] && escalera_up) {
 					pers_state=S_UP_LADDER;
 					pers_substate=0;
 					next_x=object[escalera_up_i].x;
 					in_ladder=escalera_up_i;
 				} /* if */ 
-				if (keyboard[DOWN_KEY] && !old_keyboard[DOWN_KEY] && escalera_down && pers_state!=S_JUMPING) {
+				if (keyboard[DOWN_KEY] && escalera_down && pers_state!=S_JUMPING) {
 					pers_state=S_DOWN_LADDER;
 					pers_substate=0;
 					next_x=object[escalera_down_i].x;
@@ -842,7 +840,7 @@ void GameInGameCycle(int dx,int dy)
 					pers_pos=0;
 					next_x=pers_x;	/* If the character must fall, he cannot walk */ 
 				} /* if */ 
-				if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY] && !in_lava) {
+				if (keyboard[SWORD_KEY] && !in_lava) {
 					Sound_play(S_sword);
 					if (pers_state==S_UNCONTROLED_FALL) {
 						pers_state=S_UC_FALL_SWORD;
@@ -862,7 +860,7 @@ void GameInGameCycle(int dx,int dy)
 						sword_time=0;
 					} /* if */ 
 				} /* if */ 
-				if (keyboard[WEAPON_KEY] && !old_keyboard[WEAPON_KEY]) fire_arrow(); 
+				if (keyboard[WEAPON_KEY]) fire_arrow(); 
 				break;
 		case S_WALKING_LEFT:
 				if (in_water) {
@@ -878,7 +876,7 @@ void GameInGameCycle(int dx,int dy)
 				if (pers_substate<4) pers_pos=1;
 				if (pers_substate>=4) pers_pos=0;
 
-				if (keyboard[LEFT_KEY] && !old_keyboard[RIGHT_KEY]) pers_walk_state=1;
+				if (keyboard[LEFT_KEY]) pers_walk_state=1;
 
 				if (keyboard[RIGHT_KEY] && pers_walk_state==1) pers_state=S_WALKING_RIGHT;
 
@@ -886,20 +884,20 @@ void GameInGameCycle(int dx,int dy)
 					if (!keyboard[RIGHT_KEY]) pers_state=S_QUIET;
 						 			     else pers_state=S_WALKING_RIGHT;
 				} /* if */ 
-				if (keyboard[UP_KEY] && !old_keyboard[UP_KEY] && !escalera_up && !in_lava) {
+				if (keyboard[UP_KEY] && !escalera_up && !in_lava) {
 					Sound_play(S_jump);
 					pers_state=S_JUMPING;
 					if (character_over_vertical_lever) jumping_from_elevator=true;
 					pers_substate=0;
 					jump_inertia=-1;
 				} /* if */ 
-				if (keyboard[UP_KEY] && !old_keyboard[UP_KEY] && escalera_up) {
+				if (keyboard[UP_KEY] && escalera_up) {
 					pers_state=S_UP_LADDER;
 					pers_substate=0;
 					next_x=object[escalera_up_i].x;
 					in_ladder=escalera_up_i;
 				} /* if */ 
-				if (keyboard[DOWN_KEY] && !old_keyboard[DOWN_KEY] && escalera_down && pers_state!=S_JUMPING) {
+				if (keyboard[DOWN_KEY] && escalera_down && pers_state!=S_JUMPING) {
 					pers_state=S_DOWN_LADDER;
 					pers_substate=0;
 					next_x=object[escalera_down_i].x;
@@ -915,7 +913,7 @@ void GameInGameCycle(int dx,int dy)
 					pers_pos=0;
 					next_x=pers_x;	/* If the character must fall, he cannot walk */ 
 				} /* if */ 
-				if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY] && !in_lava) {
+				if (keyboard[SWORD_KEY] && !in_lava) {
 					Sound_play(S_sword);
 					if (pers_state==S_UNCONTROLED_FALL) {
 						pers_state=S_UC_FALL_SWORD;
@@ -935,7 +933,7 @@ void GameInGameCycle(int dx,int dy)
 						sword_time=0;
 					} /* if */ 
 				} /* if */ 
-				if (keyboard[WEAPON_KEY] && !old_keyboard[WEAPON_KEY]) fire_arrow(); 
+				if (keyboard[WEAPON_KEY]) fire_arrow(); 
 				break;
 		case S_UNCONTROLED_FALL:
 				colision=T_WALL|T_LADDER_WALL|T_DOOR_WALL;
@@ -973,7 +971,7 @@ void GameInGameCycle(int dx,int dy)
 					pers_substate=0;
 					pers_pos=0;
 				} /* if */ 
-				if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY]) {
+				if (keyboard[SWORD_KEY]) {
 					Sound_play(S_sword);
 					if (pers_state==S_UNCONTROLED_FALL) {
 						pers_state=S_UC_FALL_SWORD;
@@ -992,7 +990,7 @@ void GameInGameCycle(int dx,int dy)
 						pers_pos=3;
 					} /* if */ 
 				} /* if */ 
-				if (keyboard[WEAPON_KEY] && !old_keyboard[WEAPON_KEY]) fire_arrow(); 
+				if (keyboard[WEAPON_KEY]) fire_arrow(); 
 				break;
 
 		case S_CONTROLED_FALL:
@@ -1071,7 +1069,7 @@ void GameInGameCycle(int dx,int dy)
 					pers_pos=0;
 				} /* if */ 
 
-				if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY]) {
+				if (keyboard[SWORD_KEY]) {
 					Sound_play(S_sword);
 					if (pers_state==S_CONTROLED_FALL) {
 						pers_state=S_C_FALL_SWORD;
@@ -1090,7 +1088,7 @@ void GameInGameCycle(int dx,int dy)
 						pers_pos=3;
 					} /* if */ 
 				} /* if */ 
-				if (keyboard[WEAPON_KEY] && !old_keyboard[WEAPON_KEY]) fire_arrow(); 
+				if (keyboard[WEAPON_KEY]) fire_arrow(); 
 				break;
 
 		case S_JUMPING:
@@ -1205,7 +1203,7 @@ void GameInGameCycle(int dx,int dy)
 					pers_state=S_CONTROLED_FALL;
 					pers_substate=0;
 				} /* if */ 
-				if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY]) {
+				if (keyboard[SWORD_KEY]) {
 					Sound_play(S_sword);
 					if (pers_state==S_CONTROLED_FALL) {
 						pers_state=S_C_FALL_SWORD;
@@ -1229,7 +1227,7 @@ void GameInGameCycle(int dx,int dy)
 						pers_pos=3;
 					} /* if */ 
 				} /* if */ 
-				if (keyboard[WEAPON_KEY] && !old_keyboard[WEAPON_KEY]) fire_arrow(); 
+				if (keyboard[WEAPON_KEY]) fire_arrow(); 
 				break;
 		case S_STOPPED_JUMPING:
 				pers_pos=2;
@@ -1253,7 +1251,7 @@ void GameInGameCycle(int dx,int dy)
 					pers_state=S_CONTROLED_FALL;
 					pers_substate=0;
 				} /* if */ 
-				if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY]) {
+				if (keyboard[SWORD_KEY]) {
 					Sound_play(S_sword);
 					if (pers_state==S_CONTROLED_FALL) {
 						pers_state=S_C_FALL_SWORD;
@@ -1277,7 +1275,7 @@ void GameInGameCycle(int dx,int dy)
 						pers_pos=3;
 					} /* if */ 
 				} /* if */ 
-				if (keyboard[WEAPON_KEY] && !old_keyboard[WEAPON_KEY]) fire_arrow(); 
+				if (keyboard[WEAPON_KEY]) fire_arrow(); 
 				break;
 		case S_QUIET_SWORD:
 				{
@@ -1313,7 +1311,7 @@ void GameInGameCycle(int dx,int dy)
 					} /* if */ 
 					pers_substate++;
 					sword_time++;
-					if (keyboard[WEAPON_KEY] && !old_keyboard[WEAPON_KEY]) fire_arrow(); 
+					if (keyboard[WEAPON_KEY]) fire_arrow(); 
 				}
 				break;
 		case S_UC_FALL_SWORD:
@@ -1368,7 +1366,7 @@ void GameInGameCycle(int dx,int dy)
 					} /* if */ 
 				} /* if */ 
 				sword_time++;
-				if (keyboard[WEAPON_KEY] && !old_keyboard[WEAPON_KEY]) fire_arrow(); 
+				if (keyboard[WEAPON_KEY]) fire_arrow(); 
 				break;
 		case S_C_FALL_SWORD:
 				pers_pos=4;
@@ -1467,7 +1465,7 @@ void GameInGameCycle(int dx,int dy)
 				} /* if */ 
 
 				sword_time++;
-				if (keyboard[WEAPON_KEY] && !old_keyboard[WEAPON_KEY]) fire_arrow(); 
+				if (keyboard[WEAPON_KEY]) fire_arrow(); 
 				break;
 		case S_JUMPING_SWORD:
 				pers_pos=4;
@@ -1579,7 +1577,7 @@ void GameInGameCycle(int dx,int dy)
 				} /* if */ 
 
 				sword_time++;
-				if (keyboard[WEAPON_KEY] && !old_keyboard[WEAPON_KEY]) fire_arrow(); 
+				if (keyboard[WEAPON_KEY]) fire_arrow(); 
 				break;
 		case S_SJ_SWORD:
 				pers_pos=4;
@@ -1619,7 +1617,7 @@ void GameInGameCycle(int dx,int dy)
 					} /* if */ 
 				} /* if */ 
 				sword_time++;
-				if (keyboard[WEAPON_KEY] && !old_keyboard[WEAPON_KEY]) fire_arrow(); 
+				if (keyboard[WEAPON_KEY]) fire_arrow(); 
 				break;
 		case S_UP_LADDER:
 				next_x=object[in_ladder].x;
@@ -1829,14 +1827,14 @@ void GameInGameCycle(int dx,int dy)
 						} /* if */ 
 					} /* if */ 
 				} /* if */ 
-				if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY] && pers_state==S_QUIET_LADDER) {
+				if (keyboard[SWORD_KEY] && pers_state==S_QUIET_LADDER) {
 					Sound_play(S_sword);
 					pers_state=S_SWORD_LADDER;
 					sword_time=0;
 					pers_substate=0;
 					pers_pos=3;
 				} /* if */ 
-				if (keyboard[WEAPON_KEY] && !old_keyboard[WEAPON_KEY]) fire_arrow(); 
+				if (keyboard[WEAPON_KEY]) fire_arrow(); 
 				break;
 
 		case S_SWORD_LADDER:
@@ -1854,7 +1852,7 @@ void GameInGameCycle(int dx,int dy)
 				} /* if */ 
 
 				sword_time++;
-				if (keyboard[WEAPON_KEY] && !old_keyboard[WEAPON_KEY]) fire_arrow(); 
+				if (keyboard[WEAPON_KEY]) fire_arrow(); 
 				break;
 
 		case S_HIT:
@@ -2054,7 +2052,7 @@ void GameInGameCycle(int dx,int dy)
 //					HP_restore(map_x,map_y);
 				} /* if */ 
 				if (pers_substate>64) {
-					/* Recién salido de la puerta: */ 
+					/* Reciï¿½n salido de la puerta: */ 
 
 					pers_state=S_QUIET;
 					pers_substate=0;
@@ -2138,7 +2136,7 @@ void GameInGameCycle(int dx,int dy)
 					} /* if */ 
 				} /* if */ 
 				if (pers_substate>64) {
-					/* Recién salido de la puerta: */ 
+					/* Reciï¿½n salido de la puerta: */ 
 					
 					pers_state=S_QUIET;
 					pers_substate=0;
@@ -2281,7 +2279,7 @@ void GameInGameCycle(int dx,int dy)
 		} /* if */ 
 	} 
 
-	/* Corregir la posición del personaje: */ 
+	/* Corregir la posiciï¿½n del personaje: */ 
 	if ((pers_state==S_QUIET || pers_state==S_HIT ||
 		 pers_state==S_HIT_RECOVERY || pers_state==S_HIT_COLISION) &&
 		(tiles[val+pers_pos+MASK_OFFSET]->
@@ -2319,7 +2317,7 @@ void GameInGameCycle(int dx,int dy)
 		} /* if */ 
 	} /* if */ 
 
-	/* Corregir la posición de la espada: */ 
+	/* Corregir la posiciï¿½n de la espada: */ 
 	if (sword) {
 		sword_x+=pers_x-old_x;
 		sword_y+=pers_y-old_y;
@@ -2337,7 +2335,7 @@ void GameInGameCycle(int dx,int dy)
 	} /* if */ 
 
 	if (invert_move) {
-		SDLKey tmp;
+		SDL_Scancode tmp;
 		tmp=LEFT_KEY;
 		LEFT_KEY=RIGHT_KEY;
 		RIGHT_KEY=tmp;

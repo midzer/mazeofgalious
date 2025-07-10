@@ -10,7 +10,7 @@
 
 bool IsAltPressed()
 {
-	SDLMod modifiers;
+	SDL_Keymod modifiers;
 
 	SDL_PumpEvents();
 	modifiers=SDL_GetModState();

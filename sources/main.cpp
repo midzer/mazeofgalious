@@ -28,7 +28,7 @@ int COLOUR_DEPTH = 8;
 
 #define TRANSPARANT_COLOR (0)
 
-bool fullscreen = true;
+bool fullscreen = false;
 
 // Redrawing constant
 int REDRAWING_PERIOD = 40;
@@ -62,10 +62,13 @@ void pause(unsigned int time)
 
 /* Pantalla: */ 
 
+SDL_Window *sdlWindow;
+SDL_Renderer *sdlRenderer;
 SDL_Surface *screen;
+SDL_Texture *sdlTexture;
 
 void Render(SDL_Surface *surface);
-SDL_Surface* initializeSDL(int flags);
+void initializeSDL(int flags);
 void finalizeSDL();
 
 #ifdef _WIN32
@@ -81,11 +84,7 @@ int main(int argc, char** argv)
 	SDL_Event event;
     bool quit = false;
 
-	screen = initializeSDL((fullscreen ? SDL_FULLSCREEN : 0));
-
-	if (screen == 0) {
-		return 0;
-	}
+	initializeSDL((fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
 
 	time= init_time = SDL_GetTicks();
 
@@ -101,7 +100,7 @@ int main(int argc, char** argv)
                 case SDL_KEYDOWN:
 #ifdef __APPLE__
                     // different quit shortcut on OSX: apple+Q
-                    if (event.key.keysym.sym == SDLK_q) {
+                    if (event.key.keysym.sym == SDL_SCANCODE_q) {
                         SDLMod modifiers;
                         modifiers = SDL_GetModState();
                         if ((modifiers&KMOD_META) != 0) {
@@ -111,7 +110,7 @@ int main(int argc, char** argv)
 #endif
 #ifdef _WIN32
                     // different quit shortcut on WIN32: ALT+F4
-                    if (event.key.keysym.sym == SDLK_F4) {
+                    if (event.key.keysym.sym == SDL_SCANCODE_F4) {
                         SDLMod modifiers;
                         modifiers = SDL_GetModState();
                         if ((modifiers&KMOD_ALT) != 0) {
@@ -120,7 +119,7 @@ int main(int argc, char** argv)
                     }
 #endif
                     // default quit: F12
-                    if (event.key.keysym.sym == SDLK_F12) {
+                    if (event.key.keysym.sym == SDL_SCANCODE_F12) {
                         quit = true;
                     } /* if */
 										
@@ -130,80 +129,36 @@ FIXME: the code below is a big copy/paste; it should be in a separate function i
 */
 
 #ifdef __APPLE__
-                    if (event.key.keysym.sym == SDLK_f) {
+                    if (event.key.keysym.sym == SDL_SCANCODE_f) {
                         SDLMod modifiers;
                         modifiers = SDL_GetModState();
                         if ((modifiers&KMOD_META) != 0) {
 							fullscreen = (fullscreen ? false : true);
-							SDL_QuitSubSystem(SDL_INIT_VIDEO);
-							SDL_InitSubSystem(SDL_INIT_VIDEO);
-							
-							if (SDL_WasInit(SDL_INIT_VIDEO)) {
-								screen = SDL_SetVideoMode(SCREEN_X, SCREEN_Y, COLOUR_DEPTH, SDL_HWPALETTE|(fullscreen ? SDL_FULLSCREEN : 0));
-								
-								if (screen == NULL) {
-									output_debug_message("Couldn't set %ix%ix%i", SCREEN_X, SCREEN_Y, COLOUR_DEPTH);
-									if (fullscreen) {
-										output_debug_message( ",fullscreen,");
-									}
-									output_debug_message(" video mode: %s\n", SDL_GetError ());
-									quit = true;
-								} else {
-									output_debug_message( "Set the video resolution to: %ix%ix%i",
-										SDL_GetVideoSurface()->w, SDL_GetVideoSurface()->h,
-										SDL_GetVideoSurface()->format->BitsPerPixel);
-									if (fullscreen) {
-										output_debug_message( ",fullscreen");
-									}
-									output_debug_message("\n");
-								}
-												
-								SDL_WM_SetCaption("Maze of Galious v0.63", 0);
-								get_palette();
-							} else {
-								quit = true;
+							Uint32 flags = 0;
+							if (fullscreen)
+							{
+								flags = SDL_WINDOW_FULLSCREEN_DESKTOP;
 							}
+							SDL_SetWindowFullscreen(sdlWindow, flags);
                         } // if
                     } // if
 #else
-                    if (event.key.keysym.sym == SDLK_RETURN)
+                    if (event.key.keysym.sym == SDL_SCANCODE_RETURN)
                     {
 						if (IsAltPressed2()) {
 							fullscreen = (fullscreen ? false : true);
-							SDL_QuitSubSystem(SDL_INIT_VIDEO);
-							SDL_InitSubSystem(SDL_INIT_VIDEO);
-							
-							if (SDL_WasInit(SDL_INIT_VIDEO)) {
-								screen = SDL_SetVideoMode(SCREEN_X, SCREEN_Y, COLOUR_DEPTH, SDL_HWPALETTE|(fullscreen ? SDL_FULLSCREEN : 0));
-								
-								if (screen == NULL) {
-									output_debug_message( "Couldn't set %ix%ix%i", SCREEN_X, SCREEN_Y, COLOUR_DEPTH);
-									if (fullscreen) {
-										output_debug_message( ",fullscreen,");
-									}
-									output_debug_message(" video mode: %s\n", SDL_GetError ());
-									quit = true;
-								} else {
-									output_debug_message( "Set the video resolution to: %ix%ix%i",
-										SDL_GetVideoSurface()->w, SDL_GetVideoSurface()->h,
-										SDL_GetVideoSurface()->format->BitsPerPixel);
-									if (fullscreen) {
-										output_debug_message( ",fullscreen");
-									}
-									output_debug_message("\n");
-								}
-												
-								SDL_WM_SetCaption("Maze of Galious v0.63", 0);
-								get_palette();
-							} else {
-								quit = true;
+							Uint32 flags = 0;
+							if (fullscreen)
+							{
+								flags = SDL_WINDOW_FULLSCREEN_DESKTOP;
 							}
+							SDL_SetWindowFullscreen(sdlWindow, flags);
                         }
                     }
 #endif
 				
 					// Change graphic set with either F10 or 9 (F10 is already used in OSX)
-					if (event.key.keysym.sym == SDLK_F10 || event.key.keysym.sym == SDLK_9) {
+					if (event.key.keysym.sym == SDL_SCANCODE_F10 || event.key.keysym.sym == SDL_SCANCODE_9) {
 
 						act_g_path++;
 						if (act_g_path >= n_g_paths) {
@@ -221,7 +176,7 @@ FIXME: the code below is a big copy/paste; it should be in a separate function i
 					} 
 
 					// Change sound set with either F11 or 0 (F10 is already used in OSX)
-					if (event.key.keysym.sym == SDLK_F11 || event.key.keysym.sym == SDLK_0) {
+					if (event.key.keysym.sym == SDL_SCANCODE_F11 || event.key.keysym.sym == SDL_SCANCODE_0) {
 
 						act_s_path++;
 						if (act_s_path >= n_s_paths) {
@@ -237,7 +192,7 @@ FIXME: the code below is a big copy/paste; it should be in a separate function i
 						SetSFXVolume(sfx_volume);
 					}
 
-					if (event.key.keysym.sym == SDLK_d) {
+					if (event.key.keysym.sym == SDL_SCANCODE_D) {
 						write_debug_report("debug-report.txt");
 					} 
                     break;
@@ -262,7 +217,12 @@ FIXME: the code below is a big copy/paste; it should be in a separate function i
 	
 				// render graphics
 				Render(screen);
-				SDL_Flip(screen);
+				SDL_Surface* temp32 = SDL_ConvertSurfaceFormat(screen, SDL_PIXELFORMAT_ARGB8888, 0);
+				SDL_UpdateTexture(sdlTexture, NULL, temp32->pixels, temp32->pitch);
+				SDL_FreeSurface(temp32);
+				SDL_RenderClear(sdlRenderer);
+				SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
+				SDL_RenderPresent(sdlRenderer);
 				
                 act_time = SDL_GetTicks();
                 max_frame_step--;
@@ -284,16 +244,9 @@ FIXME: the code below is a big copy/paste; it should be in a separate function i
 }
 
 
-SDL_Surface* initializeSDL(int moreflags)
+void initializeSDL(int moreflags)
 {
-	char VideoName[256];
-	SDL_Surface *screen;
-
-	int flags = SDL_HWPALETTE|moreflags;
-
-	if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) < 0) {
-		return 0;
-	}
+	int flags = SDL_WINDOW_ALLOW_HIGHDPI | moreflags;
 
 	output_debug_message( "Initializing SDL video subsystem.\n");
 
@@ -302,9 +255,6 @@ SDL_Surface* initializeSDL(int moreflags)
 		exit(-1);
 	}
 
-	SDL_VideoDriverName(VideoName, sizeof (VideoName));
-
-    output_debug_message( "SDL driver used: %s\n", VideoName);
     // Set the environment variable SDL_VIDEODRIVER to override
     // For Linux: x11 (default), dga, fbcon, directfb, svgalib,
     //            ggi, aalib
@@ -321,7 +271,6 @@ SDL_Surface* initializeSDL(int moreflags)
 
 
 	atexit(SDL_Quit);
-	SDL_WM_SetCaption("Maze of Galious v0.63", 0);
 	
 	if (fullscreen) {
 		SDL_ShowCursor(SDL_DISABLE);
@@ -330,10 +279,14 @@ SDL_Surface* initializeSDL(int moreflags)
 	Sound_initialization();
 
 	pause(1000);
+	
+	sdlWindow = SDL_CreateWindow("Maze of Galious v0.63",
+                             SDL_WINDOWPOS_UNDEFINED,
+                             SDL_WINDOWPOS_UNDEFINED,
+                             SCREEN_X, SCREEN_Y,
+                             flags);
 
-	screen = SDL_SetVideoMode(SCREEN_X, SCREEN_Y, COLOUR_DEPTH, flags);
-
-	if (screen == NULL) {
+	if (sdlWindow == NULL) {
 		output_debug_message( "Couldn't set %ix%ix%i", SCREEN_X, SCREEN_Y, COLOUR_DEPTH);
 	    if (fullscreen) {
 			output_debug_message( ",fullscreen,");
@@ -341,18 +294,22 @@ SDL_Surface* initializeSDL(int moreflags)
 		output_debug_message(" video mode: %s\n", SDL_GetError ());
 	    exit(-1);
 	} else {
-	    output_debug_message( "Set the video resolution to: %ix%ix%i",
-				 SDL_GetVideoSurface()->w, SDL_GetVideoSurface()->h,
-				 SDL_GetVideoSurface()->format->BitsPerPixel);
+	    output_debug_message( "Set the video resolution to: %ix%i",
+				SCREEN_X, SCREEN_Y);
 	    if (fullscreen) {
 			output_debug_message( ",fullscreen");
 		}
 	    output_debug_message("\n");
     }
-	
-	SDL_EnableUNICODE(1);
-	
-	return screen;
+
+	sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, 0);
+
+	screen = SDL_CreateRGBSurface(0, SCREEN_X, SCREEN_Y, 8, 0, 0, 0, 0);
+
+	sdlTexture = SDL_CreateTexture(sdlRenderer,
+                                    SDL_PIXELFORMAT_ARGB8888,
+                                    SDL_TEXTUREACCESS_STREAMING,
+                                    SCREEN_X, SCREEN_Y);
 }
 
 void finalizeSDL()

@@ -14,7 +14,7 @@
 #include "mog.h"
 
 
-/* Gráficos: */ 
+/* Grï¿½ficos: */ 
 extern Bitmap *konami_bmp,*menu_bmp,*tiles_bmp,*enemy_bmp;
 extern int n_tiles;
 extern CTile **tiles;
@@ -29,9 +29,9 @@ extern int cycle;
 
 /* Juego: */ 
 extern int inter_screen;
-extern int map;			/* En que mundo está el personaje			*/ 
-extern int map_x,map_y;	/* En que habitación dentro del mundo		*/ 
-extern int pers_x,pers_y;	/* Posición del personaje en la habitación	*/ 
+extern int map;			/* En que mundo estï¿½ el personaje			*/ 
+extern int map_x,map_y;	/* En que habitaciï¿½n dentro del mundo		*/ 
+extern int pers_x,pers_y;	/* Posiciï¿½n del personaje en la habitaciï¿½n	*/ 
 extern int pers_pos;
 extern bool pers_right;	/* Hacia donde mira el personaje			*/ 
 extern int pers_state;		/* Estado en el que se encuentra el personaje	*/ 
@@ -42,10 +42,10 @@ extern bool sword;				/* Hay que dibujar la espada?	*/
 extern bool old_sword;
 extern int sword_x,sword_y;	/* Coordenadas de la espada.	*/ 
 extern int sword_time;
-extern int in_ladder;			/* En qué escalera está el personaje	*/ 
-extern bool previous_x_collision;	/* Hubo una colisión en X en el frame anterior? */ 
-extern bool previous_y_collision;	/* Hubo una colisión en Y en el frame anterior? */ 
-extern int hit_time;	/* Contador para saber cuando pueden dañarnos de nuevo	*/ 
+extern int in_ladder;			/* En quï¿½ escalera estï¿½ el personaje	*/ 
+extern bool previous_x_collision;	/* Hubo una colisiï¿½n en X en el frame anterior? */ 
+extern bool previous_y_collision;	/* Hubo una colisiï¿½n en Y en el frame anterior? */ 
+extern int hit_time;	/* Contador para saber cuando pueden daï¿½arnos de nuevo	*/ 
 extern int character;
 extern int freezed;
 extern bool live_character[2];
@@ -508,7 +508,7 @@ void RoomChange(void)
 	} /* if */ 
 
 
-	/* Corregir la posición de la espada: */ 
+	/* Corregir la posiciï¿½n de la espada: */ 
 	if (sword) {
 		sword_x+=pers_x-old_x;
 		sword_y+=pers_y-old_y;

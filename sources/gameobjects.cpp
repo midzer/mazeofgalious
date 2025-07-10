@@ -15,7 +15,7 @@
 #include "object.h"
 
 
-/* Gráficos: */ 
+/* Grï¿½ficos: */ 
 extern Bitmap *konami_bmp,*menu_bmp,*tiles_bmp,*enemy_bmp;
 extern int n_tiles;
 extern CTile **tiles;
@@ -26,9 +26,9 @@ extern BYTE *col_buffer;
 extern int STATE,SUBSTATE;
 
 /* Juego: */ 
-extern int map;			/* En que mundo está el personaje			*/ 
-extern int map_x,map_y;	/* En que habitación dentro del mundo		*/ 
-extern int pers_x,pers_y;	/* Posición del personaje en la habitación	*/ 
+extern int map;			/* En que mundo estï¿½ el personaje			*/ 
+extern int map_x,map_y;	/* En que habitaciï¿½n dentro del mundo		*/ 
+extern int pers_x,pers_y;	/* Posiciï¿½n del personaje en la habitaciï¿½n	*/ 
 extern int pers_pos;
 extern bool pers_right;	/* Hacia donde mira el personaje			*/ 
 extern int pers_state;		/* Estado en el que se encuentra el personaje	*/ 
@@ -39,10 +39,10 @@ extern bool sword;				/* Hay que dibujar la espada?	*/
 extern bool old_sword;
 extern int sword_x,sword_y;	/* Coordenadas de la espada.	*/ 
 extern int sword_time;
-extern int in_ladder;			/* En qué escalera está el personaje	*/ 
-extern bool previous_x_collision;	/* Hubo una colisión en X en el frame anterior? */ 
-extern bool previous_y_collision;	/* Hubo una colisión en Y en el frame anterior? */ 
-extern int hit_time;	/* Contador para saber cuando pueden dañarnos de nuevo	*/ 
+extern int in_ladder;			/* En quï¿½ escalera estï¿½ el personaje	*/ 
+extern bool previous_x_collision;	/* Hubo una colisiï¿½n en X en el frame anterior? */ 
+extern bool previous_y_collision;	/* Hubo una colisiï¿½n en Y en el frame anterior? */ 
+extern int hit_time;	/* Contador para saber cuando pueden daï¿½arnos de nuevo	*/ 
 extern int character;
 extern int current_weapon;
 extern int n_fired_arrows,n_fired_mines;
@@ -126,7 +126,7 @@ void GameObjectAnimation(int dx,int dy)
 				if (object[i].state2==0) {
 					object[i].type=T_NADA;
 				} else {
-					/* Dar objetos específicos: */ 
+					/* Dar objetos especï¿½ficos: */ 
 					switch(object[i].state2) {
 					case -1:object[i].type=T_ITEM;
 							object[i].size=10;
@@ -147,7 +147,7 @@ void GameObjectAnimation(int dx,int dy)
 									object[i].type=T_ITEM;
 									object[i].state=object[i].state2-1;
 									if (object[i].state>=32) {
-										/* Los objetos arma son más pequeños: */ 
+										/* Los objetos arma son mï¿½s pequeï¿½os: */ 
 										object[i].y+=TILE_SIZE_Y;
 									} /* if */ 
 								} else {
@@ -591,8 +591,8 @@ void GameObjectAnimation(int dx,int dy)
 							object[i].state=1;
 							object[i].state2=0;
 
-							/* Si el número aleatorio es mayor que 7, se sigue en la	*/ 
-							/* misma dirección.											*/ 
+							/* Si el nï¿½mero aleatorio es mayor que 7, se sigue en la	*/ 
+							/* misma direcciï¿½n.											*/ 
 							j=object[i].state3;
 							if (j==-1) object[i].state3=rand()%12;
 								  else object[i].state3=rand()%20;
@@ -2441,8 +2441,8 @@ void GameObjectAnimation(int dx,int dy)
 					object[i].state=1;
 					object[i].state2=0;
 
-					/* Si el número aleatorio es mayor que 7, se sigue en la	*/ 
-					/* misma dirección.											*/ 
+					/* Si el nï¿½mero aleatorio es mayor que 7, se sigue en la	*/ 
+					/* misma direcciï¿½n.											*/ 
 					j=object[i].state3;
 					if (j==-1) object[i].state3=rand()%12;
 						  else object[i].state3=rand()%20;
@@ -2915,8 +2915,8 @@ void GameObjectAnimation(int dx,int dy)
 					object[i].state=1;
 					object[i].state2=0;
 
-					/* Si el número aleatorio es mayor que 11, se sigue en la	*/ 
-					/* misma dirección.											*/ 
+					/* Si el nï¿½mero aleatorio es mayor que 11, se sigue en la	*/ 
+					/* misma direcciï¿½n.											*/ 
 					j=object[i].state3;
 				    object[i].state3=rand()%32;
 					if (object[i].state3>11) object[i].state3=j;
@@ -3122,8 +3122,8 @@ void GameObjectAnimation(int dx,int dy)
 					if (object[i].state2>=16) { 
 						object[i].state2=0;
 
-						/* Si el número aleatorio es mayor que 11, se sigue en la	*/ 
-						/* misma dirección.											*/ 
+						/* Si el nï¿½mero aleatorio es mayor que 11, se sigue en la	*/ 
+						/* misma direcciï¿½n.											*/ 
 						j=object[i].state3;
 						object[i].state3=rand()%32;
 						if (object[i].state3>11) object[i].state3=j;
@@ -3236,8 +3236,8 @@ void GameObjectAnimation(int dx,int dy)
 				if (object[i].state2>=16) { 
 					object[i].state2=0;
 
-					/* Si el número aleatorio es mayor que 11, se sigue en la	*/ 
-					/* misma dirección.											*/ 
+					/* Si el nï¿½mero aleatorio es mayor que 11, se sigue en la	*/ 
+					/* misma direcciï¿½n.											*/ 
 					j=object[i].state3;
 					object[i].state3=rand()%32;
 					if (object[i].state3>11) object[i].state3=j;
@@ -3290,7 +3290,7 @@ void GameObjectAnimation(int dx,int dy)
 					(object[i].state2&0x01)==0) object[i].tile=-1;
 				if (object[i].state2==88) {
 					object[i].state2=0;
-					/* Cambio de posición: */ 
+					/* Cambio de posiciï¿½n: */ 
 					int j;
 					bool posibles[25];
 					int nposibles,selected,act;
@@ -3647,8 +3647,8 @@ void GameObjectAnimation(int dx,int dy)
 				if (object[i].state2>=16) { 
 					object[i].state2=0;
 
-					/* Si el número aleatorio es mayor que 11, se sigue en la	*/ 
-					/* misma dirección.											*/ 
+					/* Si el nï¿½mero aleatorio es mayor que 11, se sigue en la	*/ 
+					/* misma direcciï¿½n.											*/ 
 					j=object[i].state;
 					object[i].state=1+(rand()%31);
 					if (object[i].state>11) object[i].state=j;
@@ -4987,8 +4987,8 @@ void GameObjectAnimation(int dx,int dy)
 							object[i].state=4;
 							object[i].state2=0;
 
-							/* Si el número aleatorio es mayor que 7, se sigue en la	*/ 
-							/* misma dirección.											*/ 
+							/* Si el nï¿½mero aleatorio es mayor que 7, se sigue en la	*/ 
+							/* misma direcciï¿½n.											*/ 
 							j=object[i].state3;
 							if (j==-1) object[i].state3=rand()%12;
 								  else object[i].state3=rand()%20;
@@ -5193,8 +5193,8 @@ void GameObjectAnimation(int dx,int dy)
 							object[i].state=4;
 							object[i].state2=0;
 
-							/* Si el número aleatorio es mayor que 7, se sigue en la	*/ 
-							/* misma dirección.											*/ 
+							/* Si el nï¿½mero aleatorio es mayor que 7, se sigue en la	*/ 
+							/* misma direcciï¿½n.											*/ 
 							j=object[i].state3;
 							if (j==-1) object[i].state3=rand()%12;
 								  else object[i].state3=rand()%20;
@@ -5314,8 +5314,8 @@ void GameObjectAnimation(int dx,int dy)
 					} else {
 						object[i].state2=0;
 
-						/* Si el número aleatorio es mayor que 7, va en	*/ 
-						/* la dirección del personaje.					*/ 
+						/* Si el nï¿½mero aleatorio es mayor que 7, va en	*/ 
+						/* la direcciï¿½n del personaje.					*/ 
 						object[i].state3=rand()%15;
 						if (object[i].state3>7) {
 							int dx,dy;

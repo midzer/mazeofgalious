@@ -16,7 +16,7 @@
 const int MAX_FIRED_ARROWS[2]={2,3};
 
 
-/* Gráficos: */ 
+/* Grï¿½ficos: */ 
 extern Bitmap *konami_bmp,*menu_bmp,*tiles_bmp,*enemy_bmp;
 extern int n_tiles;
 extern CTile **tiles;
@@ -28,9 +28,9 @@ extern int STATE,SUBSTATE;
 extern int cycle;
 
 /* Juego: */ 
-extern int map;			/* En que mundo está el personaje			*/ 
-extern int map_x,map_y;	/* En que habitación dentro del mundo		*/ 
-extern int pers_x,pers_y;	/* Posición del personaje en la habitación	*/ 
+extern int map;			/* En que mundo estï¿½ el personaje			*/ 
+extern int map_x,map_y;	/* En que habitaciï¿½n dentro del mundo		*/ 
+extern int pers_x,pers_y;	/* Posiciï¿½n del personaje en la habitaciï¿½n	*/ 
 extern int pers_pos;
 extern bool pers_right;	/* Hacia donde mira el personaje			*/ 
 extern int pers_state;		/* Estado en el que se encuentra el personaje	*/ 
@@ -41,11 +41,10 @@ extern bool sword;				/* Hay que dibujar la espada?	*/
 extern bool old_sword;
 extern int sword_x,sword_y;	/* Coordenadas de la espada.	*/ 
 extern int sword_time;
-extern unsigned char old_keyboard[SDLK_LAST];
-extern int in_ladder;			/* En qué escalera está el personaje	*/ 
-extern bool previous_x_collision;	/* Hubo una colisión en X en el frame anterior? */ 
-extern bool previous_y_collision;	/* Hubo una colisión en Y en el frame anterior? */ 
-extern int hit_time;	/* Contador para saber cuando pueden dañarnos de nuevo	*/ 
+extern int in_ladder;			/* En quï¿½ escalera estï¿½ el personaje	*/ 
+extern bool previous_x_collision;	/* Hubo una colisiï¿½n en X en el frame anterior? */ 
+extern bool previous_y_collision;	/* Hubo una colisiï¿½n en Y en el frame anterior? */ 
+extern int hit_time;	/* Contador para saber cuando pueden daï¿½arnos de nuevo	*/ 
 extern int character;
 extern bool live_character[2],can_revive_character[2];
 extern int current_weapon;
@@ -129,17 +128,17 @@ extern int zoom;
 
 
 /* Teclas: */ 
-extern SDLKey UP_KEY,DOWN_KEY,LEFT_KEY,RIGHT_KEY;
-extern SDLKey SWORD_KEY,WEAPON_KEY,ITEM_KEY,PAUSE_KEY;
+extern SDL_Scancode UP_KEY,DOWN_KEY,LEFT_KEY,RIGHT_KEY;
+extern SDL_Scancode SWORD_KEY,WEAPON_KEY,ITEM_KEY,PAUSE_KEY;
 
 
 
 void passage_mainloop(int map,int map_x,int map_y,unsigned char *screen,int dx,int dy)
 {
-	unsigned char *keyboard;
+	const Uint8 *keyboard;
 
 	SDL_PumpEvents();
-	keyboard = (unsigned char *)SDL_GetKeyState(NULL);
+	keyboard = SDL_GetKeyboardState(NULL);
 
 	/* Dibujar el marco: */ 
 	int i;
@@ -251,11 +250,11 @@ void passage_mainloop(int map,int map_x,int map_y,unsigned char *screen,int dx,i
 		int slot=-1;
 		/* Guardar el juego a disco: */ 
 
-		if (keyboard[SDLK_F5] && !old_keyboard[SDLK_F5]) slot=1;
-		if (keyboard[SDLK_F6] && !old_keyboard[SDLK_F6]) slot=2;
-		if (keyboard[SDLK_F7] && !old_keyboard[SDLK_F7]) slot=3;
-		if (keyboard[SDLK_F8] && !old_keyboard[SDLK_F8]) slot=4;
-		if (keyboard[SDLK_F9] && !old_keyboard[SDLK_F9]) slot=5;
+		if (keyboard[SDL_SCANCODE_F5]) slot=1;
+		if (keyboard[SDL_SCANCODE_F6]) slot=2;
+		if (keyboard[SDL_SCANCODE_F7]) slot=3;
+		if (keyboard[SDL_SCANCODE_F8]) slot=4;
+		if (keyboard[SDL_SCANCODE_F9]) slot=5;
 
 		if (slot!=-1) {
 			char passwd[48];
@@ -292,22 +291,21 @@ void passage_mainloop(int map,int map_x,int map_y,unsigned char *screen,int dx,i
 					draw(GAME_VIEW_X+21*TILE_SIZE_X,GAME_VIEW_Y+12*TILE_SIZE_Y,
 						TILE_SIZE_X,TILE_SIZE_Y*2,screen,col_buffer,dx,dy,dx);
 			} /* if */ 
-			if (keyboard[RIGHT_KEY] && !old_keyboard[RIGHT_KEY]) {
+			if (keyboard[RIGHT_KEY]) {
 				if (currently_selecting<1) {
 					currently_selecting++;
 					Sound_play(S_select);
 				} /* if */ 
 			} /* if */ 
-			if (keyboard[LEFT_KEY] && !old_keyboard[LEFT_KEY]) {
+			if (keyboard[LEFT_KEY]) {
 				if (currently_selecting>0) {
 					currently_selecting--;
 					Sound_play(S_select);
 				} /* if */ 
 			} /* if */ 
-			if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY]) {
+			if (keyboard[SWORD_KEY]) {
 				if (currently_selecting==0) passage_state=2;
 				if (currently_selecting==1) passage_state=1;
-				keyboard[SWORD_KEY]=false;
 			} /* if */ 
 		} /* if */ 
 		if (passage_state==1) {
@@ -347,7 +345,7 @@ void passage_mainloop(int map,int map_x,int map_y,unsigned char *screen,int dx,i
 			tiles[152]->
 				draw(GAME_VIEW_X+9*TILE_SIZE_X,GAME_VIEW_Y+12*TILE_SIZE_Y,
 					TILE_SIZE_X,TILE_SIZE_Y*2,screen,col_buffer,dx,dy,dx);
-			if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY]) {
+			if (keyboard[SWORD_KEY]) {
 				passage_state=3;
 			} /* if */ 
 		} /* if */ 
@@ -406,21 +404,21 @@ void passage_mainloop(int map,int map_x,int map_y,unsigned char *screen,int dx,i
 					TILE_SIZE_X,TILE_SIZE_Y*2,screen,col_buffer,dx,dy,dx);
 		} /* if */ 
 
-		if (keyboard[RIGHT_KEY] && !old_keyboard[RIGHT_KEY]) {
+		if (keyboard[RIGHT_KEY]) {
 			passage_state=0;
 			if (currently_selecting<2) {
 				currently_selecting++;
 				Sound_play(S_select);
 			} /* if */ 
 		} /* if */ 
-		if (keyboard[LEFT_KEY] && !old_keyboard[LEFT_KEY]) {
+		if (keyboard[LEFT_KEY]) {
 			passage_state=0;
 			if (currently_selecting>0) {
 				currently_selecting--;
 				Sound_play(S_select);
 			} /* if */ 
 		} /* if */ 
-		if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY]) {
+		if (keyboard[SWORD_KEY]) {
 			passage_state=0;
 			if (n_coins>=price[currently_selecting] && shop_item[currently_selecting]) {
 				/* Comprar objeto: */ 
@@ -497,21 +495,21 @@ void passage_mainloop(int map,int map_x,int map_y,unsigned char *screen,int dx,i
 					TILE_SIZE_X,TILE_SIZE_Y*2,screen,col_buffer,dx,dy,dx);
 		} /* if */ 
 
-		if (keyboard[RIGHT_KEY] && !old_keyboard[RIGHT_KEY]) {
+		if (keyboard[RIGHT_KEY]) {
 			passage_state=0;
 			if (currently_selecting<2) {
 				currently_selecting++;
 				Sound_play(S_select);
 			} /* if */ 
 		} /* if */ 
-		if (keyboard[LEFT_KEY] && !old_keyboard[LEFT_KEY]) {
+		if (keyboard[LEFT_KEY]) {
 			passage_state=0;
 			if (currently_selecting>0) {
 				currently_selecting--;
 				Sound_play(S_select);
 			} /* if */ 
 		} /* if */ 
-		if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY]) {
+		if (keyboard[SWORD_KEY]) {
 			passage_state=0;
 			if (n_coins>=price[currently_selecting] && shop_item[currently_selecting]) {
 				/* Comprar objeto: */ 
@@ -566,19 +564,19 @@ void passage_mainloop(int map,int map_x,int map_y,unsigned char *screen,int dx,i
 						draw(GAME_VIEW_X+20 *TILE_SIZE_X,GAME_VIEW_Y+12*TILE_SIZE_Y,
 							TILE_SIZE_X,TILE_SIZE_Y*2,screen,col_buffer,dx,dy,dx);
 				} /* if */ 
-				if (keyboard[RIGHT_KEY] && !old_keyboard[RIGHT_KEY]) {
+				if (keyboard[RIGHT_KEY]) {
 					if (currently_selecting<1) {
 						currently_selecting++;
 						Sound_play(S_select);
 					} /* if */ 
 				} /* if */ 
-				if (keyboard[LEFT_KEY] && !old_keyboard[LEFT_KEY]) {
+				if (keyboard[LEFT_KEY]) {
 					if (currently_selecting>0) {
 						currently_selecting--;
 						Sound_play(S_select);
 					} /* if */ 
 				} /* if */ 
-				if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY]) {
+				if (keyboard[SWORD_KEY]) {
 					if (currently_selecting==0 && n_arrows>=100 && n_coins>=100 && n_keys>=20) {
 						n_arrows-=100;
 						n_coins-=100;
@@ -589,7 +587,6 @@ void passage_mainloop(int map,int map_x,int map_y,unsigned char *screen,int dx,i
 						passage_state=2;
 					} /* if */ 
 					if (currently_selecting==1) passage_state=1;
-					keyboard[SWORD_KEY]=false;
 				} /* if */ 
 			} /* if */ 
 
@@ -658,21 +655,21 @@ void passage_mainloop(int map,int map_x,int map_y,unsigned char *screen,int dx,i
 					TILE_SIZE_X,TILE_SIZE_Y*2,screen,col_buffer,dx,dy,dx);
 		} /* if */ 
 
-		if (keyboard[RIGHT_KEY] && !old_keyboard[RIGHT_KEY]) {
+		if (keyboard[RIGHT_KEY]) {
 			passage_state=0;
 			if (currently_selecting<2) {
 				currently_selecting++;
 				Sound_play(S_select);
 			} /* if */ 
 		} /* if */ 
-		if (keyboard[LEFT_KEY] && !old_keyboard[LEFT_KEY]) {
+		if (keyboard[LEFT_KEY]) {
 			passage_state=0;
 			if (currently_selecting>0) {
 				currently_selecting--;
 				Sound_play(S_select);
 			} /* if */ 
 		} /* if */ 
-		if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY]) {
+		if (keyboard[SWORD_KEY]) {
 			passage_state=0;
 			if (n_coins>=price[currently_selecting] && shop_item[currently_selecting]) {
 				/* Comprar objeto: */ 
@@ -748,21 +745,21 @@ void passage_mainloop(int map,int map_x,int map_y,unsigned char *screen,int dx,i
 					TILE_SIZE_X,TILE_SIZE_Y*2,screen,col_buffer,dx,dy,dx);
 		} /* if */ 
 
-		if (keyboard[RIGHT_KEY] && !old_keyboard[RIGHT_KEY]) {
+		if (keyboard[RIGHT_KEY]) {
 			passage_state=0;
 			if (currently_selecting<2) {
 				currently_selecting++;
 				Sound_play(S_select);
 			} /* if */ 
 		} /* if */ 
-		if (keyboard[LEFT_KEY] && !old_keyboard[LEFT_KEY]) {
+		if (keyboard[LEFT_KEY]) {
 			passage_state=0;
 			if (currently_selecting>0) {
 				currently_selecting--;
 				Sound_play(S_select);
 			} /* if */ 
 		} /* if */ 
-		if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY]) {
+		if (keyboard[SWORD_KEY]) {
 			passage_state=0;
 			if (n_coins>=price[currently_selecting] && shop_item[currently_selecting]) {
 				/* Comprar objeto: */ 
@@ -839,21 +836,21 @@ void passage_mainloop(int map,int map_x,int map_y,unsigned char *screen,int dx,i
 		} /* if */ 
 
  
-		if (keyboard[RIGHT_KEY] && !old_keyboard[RIGHT_KEY]) {
+		if (keyboard[RIGHT_KEY]) {
 			passage_state=0;
 			if (currently_selecting<2) {
 				currently_selecting++;
 				Sound_play(S_select);
 			} /* if */ 
 		} /* if */ 
-		if (keyboard[LEFT_KEY] && !old_keyboard[LEFT_KEY]) {
+		if (keyboard[LEFT_KEY]) {
 			passage_state=0;
 			if (currently_selecting>0) {
 				currently_selecting--;
 				Sound_play(S_select);
 			} /* if */ 
 		} /* if */ 
-		if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY]) {
+		if (keyboard[SWORD_KEY]) {
 			passage_state=0;
 			if (n_coins>=price[currently_selecting] && shop_item[currently_selecting]) {
 				/* Comprar objeto: */ 
@@ -928,21 +925,21 @@ void passage_mainloop(int map,int map_x,int map_y,unsigned char *screen,int dx,i
 					TILE_SIZE_X,TILE_SIZE_Y*2,screen,col_buffer,dx,dy,dx);
 		} /* if */ 
 
-		if (keyboard[RIGHT_KEY] && !old_keyboard[RIGHT_KEY]) {
+		if (keyboard[RIGHT_KEY]) {
 			passage_state=0;
 			if (currently_selecting<2) {
 				currently_selecting++;
 				Sound_play(S_select);
 			} /* if */ 
 		} /* if */ 
-		if (keyboard[LEFT_KEY] && !old_keyboard[LEFT_KEY]) {
+		if (keyboard[LEFT_KEY]) {
 			passage_state=0;
 			if (currently_selecting>0) {
 				currently_selecting--;
 				Sound_play(S_select);
 			} /* if */ 
 		} /* if */ 
-		if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY]) {
+		if (keyboard[SWORD_KEY]) {
 			passage_state=0;
 			if (n_coins>=price[currently_selecting] && shop_item[currently_selecting]) {
 				/* Comprar objeto: */ 
@@ -1019,21 +1016,21 @@ void passage_mainloop(int map,int map_x,int map_y,unsigned char *screen,int dx,i
 		} /* if */ 
 
 
-		if (keyboard[RIGHT_KEY] && !old_keyboard[RIGHT_KEY]) {
+		if (keyboard[RIGHT_KEY]) {
 			passage_state=0;
 			if (currently_selecting<2) {
 				currently_selecting++;
 				Sound_play(S_select);
 			} /* if */ 
 		} /* if */ 
-		if (keyboard[LEFT_KEY] && !old_keyboard[LEFT_KEY]) {
+		if (keyboard[LEFT_KEY]) {
 			passage_state=0;
 			if (currently_selecting>0) {
 				currently_selecting--;
 				Sound_play(S_select);
 			} /* if */ 
 		} /* if */ 
-		if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY]) {
+		if (keyboard[SWORD_KEY]) {
 			passage_state=0;
 			if (n_coins>=price[currently_selecting] && shop_item[currently_selecting]) {
 				/* Comprar objeto: */ 
@@ -1112,21 +1109,21 @@ void passage_mainloop(int map,int map_x,int map_y,unsigned char *screen,int dx,i
 		} /* if */ 
 
 
-		if (keyboard[RIGHT_KEY] && !old_keyboard[RIGHT_KEY]) {
+		if (keyboard[RIGHT_KEY]) {
 			passage_state=0;
 			if (currently_selecting<2) {
 				currently_selecting++;
 				Sound_play(S_select);
 			} /* if */ 
 		} /* if */ 
-		if (keyboard[LEFT_KEY] && !old_keyboard[LEFT_KEY]) {
+		if (keyboard[LEFT_KEY]) {
 			passage_state=0;
 			if (currently_selecting>0) {
 				currently_selecting--;
 				Sound_play(S_select);
 			} /* if */ 
 		} /* if */ 
-		if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY]) {
+		if (keyboard[SWORD_KEY]) {
 			passage_state=0;
 			if (n_coins>=price[currently_selecting] && shop_item[currently_selecting]) {
 				/* Comprar objeto: */ 
@@ -1243,7 +1240,7 @@ void passage_mainloop(int map,int map_x,int map_y,unsigned char *screen,int dx,i
 					TILE_SIZE_X,TILE_SIZE_Y*2,screen,col_buffer,dx,dy,dx);
 		} /* if */ 
 
-		if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY]) {
+		if (keyboard[SWORD_KEY]) {
 			passage_state=0;
 			if (n_coins>=price[currently_selecting] && shop_item[currently_selecting]) {
 				/* Comprar objeto: */ 
@@ -1316,7 +1313,7 @@ void passage_mainloop(int map,int map_x,int map_y,unsigned char *screen,int dx,i
 					TILE_SIZE_X,TILE_SIZE_Y*2,screen,col_buffer,dx,dy,dx);
 		} /* if */ 
 
-		if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY]) {
+		if (keyboard[SWORD_KEY]) {
 			passage_state=0;
 			if (n_coins>=price[currently_selecting] && shop_item[currently_selecting]) {
 				/* Comprar objeto: */ 
