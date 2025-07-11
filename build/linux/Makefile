@@ -26,8 +26,8 @@ OBJS = \
 	$(SRC)/render.o			$(SRC)/roomchange.o			\
 	$(SRC)/shrines.o		$(SRC)/sound.o
 
-CC = g++
-CFLAGS = -g3 -O3 -Wno-write-strings `sdl2-config --cflags`
+CC = em++
+CFLAGS = -flto -O3 -fno-rtti -fno-exceptions -Wno-write-strings `sdl2-config --cflags`
 LDFLAGS = `sdl2-config --libs` -lSDL2_image -lSDL2_mixer
 RM = rm -f
 CP = cp -r
@@ -43,7 +43,6 @@ all: $(EXE)
 
 $(EXE): $(OBJS)
 	$(CC) $^ -o $@ $(LDFLAGS)
-	@$(STRIP) $@
 	@$(ECHO) " o If there are no errors, the game compiled succesfully"
 
 clean:
