@@ -112,6 +112,7 @@ int currently_selecting=0;	/* Sirve para saber si se est� seleccionando	*/
 							/* personaje o arma.							*/ 
 bool shop_item[3];
 int passage_state=0;
+Uint8 old_keyboard[SDL_NUM_SCANCODES] = {0};
 
 int stone_hit_counter=0;	/* Sirve para acelerar el movimiento de la espada cuando	*/ 
 							/* Aprodite est� rompiedo rocas.							*/ 
@@ -378,7 +379,7 @@ void GameCycle(BYTE *screen,int dx,int dy)
 			tile_print(tmp,TILE_SIZE_X*2,TILE_SIZE_Y*22,screen,dx,dy);
 			tile_print("PRESS K TO REDEFINE THE KEYS",TILE_SIZE_X*6,TILE_SIZE_Y*23,screen,dx,dy);
 
-			if (keyboard[SDL_SCANCODE_SPACE]) {
+			if (keyboard[SDL_SCANCODE_SPACE]  && !old_keyboard[SDL_SCANCODE_SPACE]) {
 				developer_start_x=-1;
 				developer_start_y=-1;
 				developer_start_map=-1;
@@ -386,11 +387,11 @@ void GameCycle(BYTE *screen,int dx,int dy)
 				STATE=3;
 				SUBSTATE=0;
 			} /* if */ 
-			if (keyboard[SDL_SCANCODE_K]) {
+			if (keyboard[SDL_SCANCODE_K] && !old_keyboard[SDL_SCANCODE_K]) {
 				STATE=10;
 				SUBSTATE=0;
 			} /* if */ 
-			if (keyboard[SDL_SCANCODE_L]) {
+			if (keyboard[SDL_SCANCODE_L] && !old_keyboard[SDL_SCANCODE_L]) {
 				int i;
 
 				for(i=0;i<45;i++) password[i]=' ';
@@ -399,7 +400,7 @@ void GameCycle(BYTE *screen,int dx,int dy)
 				SUBSTATE=0;
 			} /* if */ 
 
-			if (keyboard[SDL_SCANCODE_G]) {
+			if (keyboard[SDL_SCANCODE_G] && !old_keyboard[SDL_SCANCODE_G]) {
 				developer_start_x=5;
 				developer_start_y=12;
 				developer_start_map=0;
@@ -695,20 +696,20 @@ void GameCycle(BYTE *screen,int dx,int dy)
 
 			drawstats(screen,dx,dy);
 
-			if (keyboard[SDL_SCANCODE_ESCAPE]) {
+			if (keyboard[SDL_SCANCODE_ESCAPE] && !old_keyboard[SDL_SCANCODE_ESCAPE]) {
 				OLDSTATE=STATE;
 				MENUOPTION=0;
 				STATE=19;
 			} /* if */ 
 
-			if (keyboard[ITEM_KEY] && player_energy[character]>0 && !pause && to_enter_cut==0) {
+			if (keyboard[ITEM_KEY] && !old_keyboard[ITEM_KEY] && player_energy[character]>0 && !pause && to_enter_cut==0) {
 				Sound_play(S_F1);
 				currently_selecting=0;
 				STATE=5;
 				SUBSTATE=0;
 			} /* if */ 
 
-			if (keyboard[PAUSE_KEY]) {
+			if (keyboard[PAUSE_KEY] && !old_keyboard[PAUSE_KEY]) {
 				pause=(pause ? false:true);
 				if (pause) {
 					pause_state=-256;
@@ -876,7 +877,8 @@ void GameCycle(BYTE *screen,int dx,int dy)
 			
 			}
 
-			if (keyboard[LEFT_KEY] || keyboard[RIGHT_KEY]) {
+			if (!old_keyboard[LEFT_KEY] && !old_keyboard[RIGHT_KEY] &&
+				(keyboard[LEFT_KEY] || keyboard[RIGHT_KEY])) {
 				if (currently_selecting==0) {
 					if (live_character[0] &&
 						live_character[1]) {
@@ -932,7 +934,8 @@ void GameCycle(BYTE *screen,int dx,int dy)
 				} /* if */ 
 			} /* if */ 
 
-			if (current_weapon!=-1 &&
+			if (!old_keyboard[UP_KEY] && !old_keyboard[DOWN_KEY] &&
+				current_weapon!=-1 &&
 				(keyboard[UP_KEY] || keyboard[DOWN_KEY])) {
 				Sound_play(S_select);
 				if (currently_selecting==1) currently_selecting=0;
@@ -950,14 +953,14 @@ void GameCycle(BYTE *screen,int dx,int dy)
 
 			SUBSTATE++;
 
-			if (keyboard[ITEM_KEY]) {
+			if (!old_keyboard[ITEM_KEY] && keyboard[ITEM_KEY]) {
 				STATE=4;
 				SUBSTATE=1;
 			} /* if */ 
 
 			/* Halo de �ngel: */ 
 			if (item[8] && (fighting_demon==0 || fighting_demon==432) &&
-				keyboard[SDL_SCANCODE_RETURN]) 
+				!old_keyboard[SDL_SCANCODE_RETURN] && keyboard[SDL_SCANCODE_RETURN]) 
 			{
 				if (map!=0) {
 					STATE=9;
@@ -981,74 +984,74 @@ void GameCycle(BYTE *screen,int dx,int dy)
 
 			/* Pluma: */ 
 			if (item[26] && map==0 && !keyboard[SDL_SCANCODE_RETURN] &&
-				(keyboard[SDL_SCANCODE_1] ||
-				 keyboard[SDL_SCANCODE_2] ||
-				 keyboard[SDL_SCANCODE_3] ||
-				 keyboard[SDL_SCANCODE_4] ||
-				 keyboard[SDL_SCANCODE_5] ||
-				 keyboard[SDL_SCANCODE_6] ||
-				 keyboard[SDL_SCANCODE_7] ||
-				 keyboard[SDL_SCANCODE_8] ||
-				 keyboard[SDL_SCANCODE_9])) {
+				((!old_keyboard[SDL_SCANCODE_1] && keyboard[SDL_SCANCODE_1]) ||
+				 (!old_keyboard[SDL_SCANCODE_2] && keyboard[SDL_SCANCODE_2]) ||
+				 (!old_keyboard[SDL_SCANCODE_3] && keyboard[SDL_SCANCODE_3]) ||
+				 (!old_keyboard[SDL_SCANCODE_4] && keyboard[SDL_SCANCODE_4]) ||
+				 (!old_keyboard[SDL_SCANCODE_5] && keyboard[SDL_SCANCODE_5]) ||
+				 (!old_keyboard[SDL_SCANCODE_6] && keyboard[SDL_SCANCODE_6]) ||
+				 (!old_keyboard[SDL_SCANCODE_7] && keyboard[SDL_SCANCODE_7]) ||
+				 (!old_keyboard[SDL_SCANCODE_8] && keyboard[SDL_SCANCODE_8]) ||
+				 (!old_keyboard[SDL_SCANCODE_9] && keyboard[SDL_SCANCODE_9]))) {
 				bool go=false;
 
-				if (keyboard[SDL_SCANCODE_1] && world_doors_open[0]) {
+				if ((!old_keyboard[SDL_SCANCODE_1] && keyboard[SDL_SCANCODE_1]) && world_doors_open[0]) {
 					map_x=3;
 					map_y=12;
 					pers_x=TILE_SIZE_X*9;
 					pers_y=TILE_SIZE_Y*5;
 					go=true;
 				} /* if */ 
-				if (keyboard[SDL_SCANCODE_2] && world_doors_open[1]) {
+				if ((!old_keyboard[SDL_SCANCODE_2] && keyboard[SDL_SCANCODE_2]) && world_doors_open[1]) {
 					map_x=10;
 					map_y=11;
 					pers_x=TILE_SIZE_X*25;
 					pers_y=TILE_SIZE_Y*5;
 					go=true;
 				} /* if */ 
-				if (keyboard[SDL_SCANCODE_3] && world_doors_open[2]) {
+				if ((!old_keyboard[SDL_SCANCODE_3] && keyboard[SDL_SCANCODE_3]) && world_doors_open[2]) {
 					map_x=10;
 					map_y=8;
 					pers_x=TILE_SIZE_X*21;
 					pers_y=TILE_SIZE_Y*5;
 					go=true;
 				} /* if */ 
-				if (keyboard[SDL_SCANCODE_4] && world_doors_open[3]) {
+				if ((!old_keyboard[SDL_SCANCODE_4] && keyboard[SDL_SCANCODE_4]) && world_doors_open[3]) {
 					map_x=0;
 					map_y=8;
 					pers_x=TILE_SIZE_X*9;
 					pers_y=TILE_SIZE_Y*9;
 					go=true;
 				} /* if */ 
-				if (keyboard[SDL_SCANCODE_5] && world_doors_open[4]) {
+				if ((!old_keyboard[SDL_SCANCODE_5] && keyboard[SDL_SCANCODE_5]) && world_doors_open[4]) {
 					map_x=8;
 					map_y=8;
 					pers_x=TILE_SIZE_X*9;
 					pers_y=TILE_SIZE_Y*5;
 					go=true;
 				} /* if */ 
-				if (keyboard[SDL_SCANCODE_6] && world_doors_open[5]) {
+				if ((!old_keyboard[SDL_SCANCODE_6] && keyboard[SDL_SCANCODE_6]) && world_doors_open[5]) {
 					map_x=14;
 					map_y=12;
 					pers_x=TILE_SIZE_X*21;
 					pers_y=TILE_SIZE_Y*5;
 					go=true;
 				} /* if */ 
-				if (keyboard[SDL_SCANCODE_7] && world_doors_open[6]) {
+				if ((!old_keyboard[SDL_SCANCODE_7] && keyboard[SDL_SCANCODE_7]) && world_doors_open[6]) {
 					map_x=5;
 					map_y=2;
 					pers_x=TILE_SIZE_X*5;
 					pers_y=TILE_SIZE_Y*17;
 					go=true;
 				} /* if */ 
-				if (keyboard[SDL_SCANCODE_8] && world_doors_open[7]) {
+				if ((!old_keyboard[SDL_SCANCODE_8] && keyboard[SDL_SCANCODE_8]) && world_doors_open[7]) {
 					map_x=4;
 					map_y=4;
 					pers_x=TILE_SIZE_X*13;
 					pers_y=TILE_SIZE_Y*17;
 					go=true;
 				} /* if */ 
-				if (keyboard[SDL_SCANCODE_9] && world_doors_open[8]) {
+				if ((!old_keyboard[SDL_SCANCODE_9] && keyboard[SDL_SCANCODE_9]) && world_doors_open[8]) {
 					map_x=7;
 					map_y=0;
 					pers_x=TILE_SIZE_X*13;
@@ -1064,14 +1067,14 @@ void GameCycle(BYTE *screen,int dx,int dy)
 				} /* if */ 
 			} /* if */ 
 
-			if (keyboard[SDL_SCANCODE_ESCAPE]) {
+			if (keyboard[SDL_SCANCODE_ESCAPE] && !old_keyboard[SDL_SCANCODE_ESCAPE]) {
 				OLDSTATE=STATE;
 				MENUOPTION=0;
 				STATE=19;
 			} /* if */ 
 
 			break;
-	case 6:	if (!keyboard[ITEM_KEY] && !keyboard[SDL_SCANCODE_RETURN]) {
+	case 6:	if (!old_keyboard[ITEM_KEY] && !old_keyboard[SDL_SCANCODE_RETURN]) {
 				STATE=4;
 				SUBSTATE=1;
 			} /* if */ 
@@ -1094,7 +1097,7 @@ void GameCycle(BYTE *screen,int dx,int dy)
 
 			passage_mainloop(map,map_x,map_y,screen,dx,dy);
 			
-			if (keyboard[DOWN_KEY]) {
+			if (!old_keyboard[DOWN_KEY] && keyboard[DOWN_KEY]) {
 				STATE=4;
 				SUBSTATE=1;
 				/* Restaurar la m�sica de juego normal: */ 
@@ -1114,13 +1117,13 @@ void GameCycle(BYTE *screen,int dx,int dy)
 
 			} /* if */ 
 
-			if (keyboard[SDL_SCANCODE_ESCAPE]) {
+			if (keyboard[SDL_SCANCODE_ESCAPE] && !old_keyboard[SDL_SCANCODE_ESCAPE]) {
 				OLDSTATE=STATE;
 				MENUOPTION=0;
 				STATE=19;
 			} /* if */ 
 			break;
-	case 8:	if (!keyboard[DOWN_KEY]) {
+	case 8:	if (!old_keyboard[DOWN_KEY]) {
 				STATE=4;
 				SUBSTATE=1;
 			} /* if */ 
@@ -1307,7 +1310,7 @@ void GameCycle(BYTE *screen,int dx,int dy)
 
 				found=false;
 				for(i=0;!found && i<SDL_NUM_SCANCODES;i++) {
-					if (keyboard[i]) {
+					if (keyboard[i] && !old_keyboard[i]) {
 						switch(SUBSTATE) {
 						case 0:UP_KEY=(SDL_Scancode)i;
 							   SUBSTATE++;
@@ -1346,10 +1349,10 @@ void GameCycle(BYTE *screen,int dx,int dy)
 				} /* for */ 
 
 				if (SUBSTATE==8 && 
-					(keyboard[SDL_SCANCODE_SPACE] ||
-					 keyboard[SDL_SCANCODE_RETURN] ||
-					 keyboard[SDL_SCANCODE_ESCAPE] ||
-					 keyboard[SDL_SCANCODE_K])) {
+					((keyboard[SDL_SCANCODE_SPACE] && !old_keyboard[SDL_SCANCODE_SPACE]) ||
+					 (keyboard[SDL_SCANCODE_RETURN] && !old_keyboard[SDL_SCANCODE_RETURN]) ||
+					 (keyboard[SDL_SCANCODE_ESCAPE] && !old_keyboard[SDL_SCANCODE_ESCAPE]) ||
+					 (keyboard[SDL_SCANCODE_K] && !old_keyboard[SDL_SCANCODE_K]))) {
 					STATE=2;
 					SUBSTATE=0;
 					guardar_configuracion("MoG.cfg");
@@ -1390,7 +1393,7 @@ void GameCycle(BYTE *screen,int dx,int dy)
 						tile_print("GAME OVER",TILE_SIZE_X*15,TILE_SIZE_Y*12,screen,dx,dy);
 						if (ZEUS_password && !ZEUS_used) {
 							tile_print("F5 CONTINUE",TILE_SIZE_X*14,TILE_SIZE_Y*14,screen,dx,dy);
-							if (keyboard[SDL_SCANCODE_F5]) {
+							if (keyboard[SDL_SCANCODE_F5] && !old_keyboard[SDL_SCANCODE_F5]) {
 								ZEUS_used=true;
 							} /* if */ 
 						} /* if */ 
@@ -1548,7 +1551,7 @@ void GameCycle(BYTE *screen,int dx,int dy)
 			
 			}
 
-			if (keyboard[SDL_SCANCODE_ESCAPE]) {
+			if (keyboard[SDL_SCANCODE_ESCAPE] && !old_keyboard[SDL_SCANCODE_ESCAPE]) {
 				OLDSTATE=STATE;
 				MENUOPTION=0;
 				STATE=19;
@@ -1597,12 +1600,13 @@ void GameCycle(BYTE *screen,int dx,int dy)
 			if (map==10) 
 				tile_print2("HAMALECH",GAME_VIEW_X+TILE_SIZE_X*12,GAME_VIEW_Y+TILE_SIZE_Y*6+TILE_SIZE_Y/2,screen,dx,dy);
 
-			if (keyboard[WEAPON_KEY] || keyboard[SWORD_KEY]) {
+			if ((!old_keyboard[WEAPON_KEY] && keyboard[WEAPON_KEY]) ||
+				(!old_keyboard[SWORD_KEY] && keyboard[SWORD_KEY])) {
 				STATE=13;
 				SUBSTATE=0;
 			} /* if */ 
 
-			if (keyboard[SDL_SCANCODE_ESCAPE]) {
+			if (keyboard[SDL_SCANCODE_ESCAPE] && !old_keyboard[SDL_SCANCODE_ESCAPE]) {
 				OLDSTATE=STATE;
 				MENUOPTION=0;
 				STATE=19;
@@ -1668,11 +1672,11 @@ void GameCycle(BYTE *screen,int dx,int dy)
 					int slot=-1;
 					/* Recuperar el juego a disco: */ 
 
-					if (keyboard[SDL_SCANCODE_F5]) slot=1;
-					if (keyboard[SDL_SCANCODE_F6]) slot=2;
-					if (keyboard[SDL_SCANCODE_F7]) slot=3;
-					if (keyboard[SDL_SCANCODE_F8]) slot=4;
-					if (keyboard[SDL_SCANCODE_F9]) slot=5;
+					if (!old_keyboard[SDL_SCANCODE_F5] && keyboard[SDL_SCANCODE_F5]) slot=1;
+					if (!old_keyboard[SDL_SCANCODE_F6] && keyboard[SDL_SCANCODE_F6]) slot=2;
+					if (!old_keyboard[SDL_SCANCODE_F7] && keyboard[SDL_SCANCODE_F7]) slot=3;
+					if (!old_keyboard[SDL_SCANCODE_F8] && keyboard[SDL_SCANCODE_F8]) slot=4;
+					if (!old_keyboard[SDL_SCANCODE_F9] && keyboard[SDL_SCANCODE_F9]) slot=5;
 
 					if (slot!=-1) {
 						char tmp[80];
@@ -1692,158 +1696,158 @@ void GameCycle(BYTE *screen,int dx,int dy)
 						} /* if */ 
 					} /* if */ 
 
-					if (keyboard[SDL_SCANCODE_ESCAPE]) {
+					if (!old_keyboard[SDL_SCANCODE_ESCAPE] && keyboard[SDL_SCANCODE_ESCAPE]) {
 						STATE=0;
 						SUBSTATE=0;
 					} /* if */ 
 
-					if (keyboard[SDL_SCANCODE_RETURN]) {
+					if (!old_keyboard[SDL_SCANCODE_RETURN] && keyboard[SDL_SCANCODE_RETURN]) {
 						if (readpassword(password)) SUBSTATE=2;
 											   else SUBSTATE=1;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_LEFT] && password_pos>0) password_pos--;
-					if (keyboard[SDL_SCANCODE_RIGHT] && password_pos<44) password_pos++;
-					if (keyboard[SDL_SCANCODE_0]) {
+					if (!old_keyboard[SDL_SCANCODE_LEFT] && keyboard[SDL_SCANCODE_LEFT] && password_pos>0) password_pos--;
+					if (!old_keyboard[SDL_SCANCODE_RIGHT] && keyboard[SDL_SCANCODE_RIGHT] && password_pos<44) password_pos++;
+					if (!old_keyboard[SDL_SCANCODE_0] && keyboard[SDL_SCANCODE_0]) {
 						password[password_pos]='0';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_1]) {
+					if (!old_keyboard[SDL_SCANCODE_1] && keyboard[SDL_SCANCODE_1]) {
 						password[password_pos]='1';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_2]) {
+					if (!old_keyboard[SDL_SCANCODE_2] && keyboard[SDL_SCANCODE_2]) {
 						password[password_pos]='2';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_3]) {
+					if (!old_keyboard[SDL_SCANCODE_3] && keyboard[SDL_SCANCODE_3]) {
 						password[password_pos]='3';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_4]) {
+					if (!old_keyboard[SDL_SCANCODE_4] && keyboard[SDL_SCANCODE_4]) {
 						password[password_pos]='4';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_5]) {
+					if (!old_keyboard[SDL_SCANCODE_5] && keyboard[SDL_SCANCODE_5]) {
 						password[password_pos]='5';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_6]) {
+					if (!old_keyboard[SDL_SCANCODE_6] && keyboard[SDL_SCANCODE_6]) {
 						password[password_pos]='6';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_7]) {
+					if (!old_keyboard[SDL_SCANCODE_7] && keyboard[SDL_SCANCODE_7]) {
 						password[password_pos]='7';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_8]) {
+					if (!old_keyboard[SDL_SCANCODE_8] && keyboard[SDL_SCANCODE_8]) {
 						password[password_pos]='8';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_9]) {
+					if (!old_keyboard[SDL_SCANCODE_9] && keyboard[SDL_SCANCODE_9]) {
 						password[password_pos]='9';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_A]) {
+					if (!old_keyboard[SDL_SCANCODE_A] && keyboard[SDL_SCANCODE_A]) {
 						password[password_pos]='A';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_B]) {
+					if (!old_keyboard[SDL_SCANCODE_B] && keyboard[SDL_SCANCODE_B]) {
 						password[password_pos]='B';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_C]) {
+					if (!old_keyboard[SDL_SCANCODE_C] && keyboard[SDL_SCANCODE_C]) {
 						password[password_pos]='C';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_D]) {
+					if (!old_keyboard[SDL_SCANCODE_D] && keyboard[SDL_SCANCODE_D]) {
 						password[password_pos]='D';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_E]) {
+					if (!old_keyboard[SDL_SCANCODE_E] && keyboard[SDL_SCANCODE_E]) {
 						password[password_pos]='E';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_F]) {
+					if (!old_keyboard[SDL_SCANCODE_F] && keyboard[SDL_SCANCODE_F]) {
 						password[password_pos]='F';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_G]) {
+					if (!old_keyboard[SDL_SCANCODE_G] && keyboard[SDL_SCANCODE_G]) {
 						password[password_pos]='G';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_H]) {
+					if (!old_keyboard[SDL_SCANCODE_H] && keyboard[SDL_SCANCODE_H]) {
 						password[password_pos]='H';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_I]) {
+					if (!old_keyboard[SDL_SCANCODE_I] && keyboard[SDL_SCANCODE_I]) {
 						password[password_pos]='I';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_J]) {
+					if (!old_keyboard[SDL_SCANCODE_J] && keyboard[SDL_SCANCODE_J]) {
 						password[password_pos]='J';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_K]) {
+					if (!old_keyboard[SDL_SCANCODE_K] && keyboard[SDL_SCANCODE_K]) {
 						password[password_pos]='K';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_L]) {
+					if (!old_keyboard[SDL_SCANCODE_L] && keyboard[SDL_SCANCODE_L]) {
 						password[password_pos]='L';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_M]) {
+					if (!old_keyboard[SDL_SCANCODE_M] && keyboard[SDL_SCANCODE_M]) {
 						password[password_pos]='M';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_N]) {
+					if (!old_keyboard[SDL_SCANCODE_N] && keyboard[SDL_SCANCODE_N]) {
 						password[password_pos]='N';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_O]) {
+					if (!old_keyboard[SDL_SCANCODE_O] && keyboard[SDL_SCANCODE_O]) {
 						password[password_pos]='O';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_P]) {
+					if (!old_keyboard[SDL_SCANCODE_P] && keyboard[SDL_SCANCODE_P]) {
 						password[password_pos]='P';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_Q]) {
+					if (!old_keyboard[SDL_SCANCODE_Q] && keyboard[SDL_SCANCODE_Q]) {
 						password[password_pos]='Q';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_R]) {
+					if (!old_keyboard[SDL_SCANCODE_R] && keyboard[SDL_SCANCODE_R]) {
 						password[password_pos]='R';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_S]) {
+					if (!old_keyboard[SDL_SCANCODE_S] && keyboard[SDL_SCANCODE_S]) {
 						password[password_pos]='S';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_T]) {
+					if (!old_keyboard[SDL_SCANCODE_T] && keyboard[SDL_SCANCODE_T]) {
 						password[password_pos]='T';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_U]) {
+					if (!old_keyboard[SDL_SCANCODE_U] && keyboard[SDL_SCANCODE_U]) {
 						password[password_pos]='U';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_V]) {
+					if (!old_keyboard[SDL_SCANCODE_V] && keyboard[SDL_SCANCODE_V]) {
 						password[password_pos]='V';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_W]) {
+					if (!old_keyboard[SDL_SCANCODE_W] && keyboard[SDL_SCANCODE_W]) {
 						password[password_pos]='W';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_X]) {
+					if (!old_keyboard[SDL_SCANCODE_X] && keyboard[SDL_SCANCODE_X]) {
 						password[password_pos]='X';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_Y]) {
+					if (!old_keyboard[SDL_SCANCODE_Y] && keyboard[SDL_SCANCODE_Y]) {
 						password[password_pos]='Y';
 						password_pos++;
 					} /* if */ 
-					if (keyboard[SDL_SCANCODE_Z]) {
+					if (!old_keyboard[SDL_SCANCODE_Z] && keyboard[SDL_SCANCODE_Z]) {
 						password[password_pos]='Z';
 						password_pos++;
 					} /* if */ 
@@ -1854,7 +1858,7 @@ void GameCycle(BYTE *screen,int dx,int dy)
 				if (SUBSTATE==1) {
 					tile_print("THAT IS THE WRONG",TILE_SIZE_X*9,TILE_SIZE_Y*17,screen,dx,dy);
 					tile_print("CODE",TILE_SIZE_X*9,TILE_SIZE_Y*19,screen,dx,dy);
-					if (keyboard[SDL_SCANCODE_RETURN]) SUBSTATE=0;
+					if (!old_keyboard[SDL_SCANCODE_RETURN] && keyboard[SDL_SCANCODE_RETURN]) SUBSTATE=0;
 				} /* if */ 
 				if (SUBSTATE>=2) {
 					tile_print("MY MEMORY HAS BEEN",TILE_SIZE_X*9,TILE_SIZE_Y*17,screen,dx,dy);
@@ -1905,22 +1909,22 @@ void GameCycle(BYTE *screen,int dx,int dy)
 				sprintf(tmp,"MAP: %.2i",developer_start_map);			
 				tile_print(tmp,TILE_SIZE_X*9,TILE_SIZE_Y*6,screen,dx,dy);
 
-				if (keyboard[UP_KEY]) {
+				if (keyboard[UP_KEY] && !old_keyboard[UP_KEY]) {
 					if (developer_start_y>0) developer_start_y--;
 				} /* if */ 
-				if (keyboard[DOWN_KEY]) {
+				if (keyboard[DOWN_KEY] && !old_keyboard[DOWN_KEY]) {
 					if (developer_start_y<15) developer_start_y++;
 				} /* if */ 
-				if (keyboard[LEFT_KEY]) {
+				if (keyboard[LEFT_KEY] && !old_keyboard[LEFT_KEY]) {
 					if (developer_start_x>0) developer_start_x--;
 				} /* if */ 
-				if (keyboard[RIGHT_KEY]) {
+				if (keyboard[RIGHT_KEY] && !old_keyboard[RIGHT_KEY]) {
 					if (developer_start_x<14) developer_start_x++;
 				} /* if */ 
-				if (keyboard[SDL_SCANCODE_PAGEDOWN]) {
+				if (keyboard[SDL_SCANCODE_PAGEDOWN] && !old_keyboard[SDL_SCANCODE_PAGEDOWN]) {
 					if (developer_start_map>0) developer_start_map--;
 				} /* if */ 
-				if (keyboard[SDL_SCANCODE_PAGEUP]) {
+				if (keyboard[SDL_SCANCODE_PAGEUP] && !old_keyboard[SDL_SCANCODE_PAGEUP]) {
 					if (developer_start_map<10) developer_start_map++;
 				} /* if */ 
 
@@ -1930,7 +1934,7 @@ void GameCycle(BYTE *screen,int dx,int dy)
 				fp=f1open(filename,"r",GAMEDATA);
 				if (fp!=0) {
 					tile_print("PRESS SPACE TO START",TILE_SIZE_X*9,TILE_SIZE_Y*8,screen,dx,dy);
-					if (keyboard[SDL_SCANCODE_SPACE]) {
+					if (keyboard[SDL_SCANCODE_SPACE] && !old_keyboard[SDL_SCANCODE_SPACE]) {
 						strcpy(password,"UR3QUR5FUG4F123NUL7WHUD4VT7WHUD4VYTFUR3FURS76");
 						STATE=3;
 						SUBSTATE=30;
@@ -1989,7 +1993,8 @@ void GameCycle(BYTE *screen,int dx,int dy)
 					} /* if */ 
 				} /* for */ 
 
-				if (SUBSTATE>=64*TILE_SIZE_Y || keyboard[SDL_SCANCODE_SPACE]) {
+				if (SUBSTATE>=64*TILE_SIZE_Y ||
+					(keyboard[SDL_SCANCODE_SPACE]  && !old_keyboard[SDL_SCANCODE_SPACE])) {
 					/* musica: */ 
 					Sound_release_music();
 					STATE=0;
@@ -2248,14 +2253,14 @@ void GameCycle(BYTE *screen,int dx,int dy)
 					   else sprintf(tmp,"WORLD %.2i  %s%i",map,letter[map_x],map_y+1);
 				tile_print(tmp,TILE_SIZE_X*13,TILE_SIZE_Y*12,screen,dx,dy);
 
-				if (keyboard[SDL_SCANCODE_ESCAPE]) {
+				if (keyboard[SDL_SCANCODE_ESCAPE] && !old_keyboard[SDL_SCANCODE_ESCAPE]) {
 					STATE=OLDSTATE;
 					guardar_configuracion("MoG.cfg");
 				} /* if */ 
-				if (keyboard[DOWN_KEY] && MENUOPTION<2) MENUOPTION++;
-				if (keyboard[UP_KEY] && MENUOPTION>0) MENUOPTION--;
+				if (keyboard[DOWN_KEY] && !old_keyboard[DOWN_KEY] && MENUOPTION<2) MENUOPTION++;
+				if (keyboard[UP_KEY] && !old_keyboard[UP_KEY] && MENUOPTION>0) MENUOPTION--;
 
-				if (keyboard[SWORD_KEY] && MENUOPTION==0) {
+				if (keyboard[SWORD_KEY] && !old_keyboard[SWORD_KEY] && MENUOPTION==0) {
 					Sound_release_music();
 					STATE=0;
 					SUBSTATE=0;
@@ -2324,6 +2329,9 @@ void GameCycle(BYTE *screen,int dx,int dy)
 
 		logic_dx[1]=physic_dx[1]=0;
 	} /* if */ 
+
+	/* Viejo estado del teclado: */ 
+	memcpy(old_keyboard, keyboard, SDL_NUM_SCANCODES);
 
 	cycle++;
 } /* GameCycle */ 
